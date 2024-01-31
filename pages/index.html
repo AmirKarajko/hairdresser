@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="stylesheet" href="/static/bootstrap-5.3.2-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/bootstrap-5.3.2-dist/js/bootstrap.min.js">
+
+        <title>{{.Title}}</title>
+    </head>
+    <body>
+        <h1>{{.Title}}</h1>
+        <p>{{.Content}}</p>
+
+        <form action="/addbill" method="post">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group mb-2">
+                        <label for="service-list">Service</label>
+                        <select id="service-list" name="service-list" class="form-control">
+                            {{range .Services}}
+                                <option value="{{index . 0}}">{{index . 1}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group mb-2">
+                        <label for="bill-date">Date</label>
+                        <input type="date" id="bill-date" name="bill-date" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Add bill</button>
+                    <a href="/service">Go to Service Page</a>
+                </div>
+            </div>
+        </form>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Service</th>
+                    <th scope="col">Date</th>
+                </tr>
+                {{range .Bills}}
+                    <tr><th scope="col">{{index . 0}}</th><th scope="col">{{index . 1}}</th><th scope="col">{{index . 2}}</th></tr>
+                {{end}}
+            </thead>
+        </table>
+
+        <script src="/static/bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

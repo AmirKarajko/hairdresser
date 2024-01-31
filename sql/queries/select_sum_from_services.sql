@@ -1,0 +1,1 @@
+SELECT SUM(services.price) AS result FROM services INNER JOIN bills ON bills.service = services.ID WHERE bills.date BETWEEN '2023-01-01' AND '2023-01-06'

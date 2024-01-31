@@ -1,0 +1,1 @@
+INSERT INTO bills (service, date) VALUES (1, '2024-01-05');
