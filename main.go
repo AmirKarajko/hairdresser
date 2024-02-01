@@ -54,11 +54,16 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
     http.HandleFunc("/", indexHandler)
+
 	http.HandleFunc("/addbill", addBillHandler)
 	http.HandleFunc("/deletebill/", deleteBillHandler)
+
 	http.HandleFunc("/service", serviceHandler)
 	http.HandleFunc("/addservice", addServiceHandler)
 	http.HandleFunc("/deleteservice/", deleteServiceHandler)
+
+	http.HandleFunc("/calculator", calculatorHandler)
+
     http.ListenAndServe(":8080", nil)
 }
 
@@ -287,4 +292,56 @@ func deleteServiceHandler(w http.ResponseWriter, r *http.Request) {
 	databaseDisconnect()
 
 	http.Redirect(w, r, "/service", http.StatusSeeOther)
+}
+
+type CalculatorPageData struct {
+	Title string
+	Content string
+	Result float32
+}
+
+// Calculator Page
+func calculatorHandler(w http.ResponseWriter, r *http.Request) {
+	data := CalculatorPageData {
+		Title: "Hairdresser | Calculator",
+		Content: "This is a hairdresser web application.",
+		Result: 0,
+	}
+
+	if r.Method == http.MethodGet {
+		billDateFrom := r.FormValue("bill-date-from")
+		billDateTo := r.FormValue("bill-date-to")
+
+		data.Result = getCalculatorResult(billDateFrom, billDateTo)
+	}
+
+	tmpl, err := template.ParseFiles("pages/calculator.html", "pages/navbar.html")
+
+	if err != nil {
+		log.Fatal(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, data)
+
+	if err != nil {
+		log.Fatal(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+}
+
+func getCalculatorResult(billDateFrom string, billDateTo string) float32 {
+	var result float32
+
+	databaseConnect()
+
+	query := "SELECT SUM(services.price) AS result FROM services INNER JOIN bills ON bills.service = services.ID WHERE bills.date BETWEEN ? AND ?"
+	
+	db.QueryRow(query, billDateFrom, billDateTo).Scan(&result)
+
+	databaseDisconnect()
+
+	return result
 }
