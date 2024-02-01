@@ -6,42 +6,41 @@
         <link rel="stylesheet" href="/static/bootstrap-5.3.2-dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="/static/bootstrap-5.3.2-dist/js/bootstrap.min.js">
 
+        <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico">
+
         <title>{{.Title}}</title>
     </head>
     <body>
         {{template "navbar.html"}}
 
-        <h1>{{.Title}}</h1>
-        <p>{{.Content}}</p>
+        <div class="text-center">
+            <h1>{{.Title}}</h1>
+            <p>{{.Content}}</p>
+        </div>
 
-        <form action="/addbill" method="post">
-            <div class="row">
-                <div class="col">
-                    <div class="form-group mb-2">
-                        <label for="service-list">Service</label>
-                        <select id="service-list" name="service-list" class="form-control">
-                            {{range .Services}}
-                                <option value="{{index . 0}}">{{index . 1}}</option>
-                            {{end}}
-                        </select>
-                    </div>
-                </div>
+        <div class="container" style="width: 50%;">
+            <div class="text-center">
+                <img class="rounded" src="/static/assets/logo.png">
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="form-group mb-2">
-                        <label for="bill-date">Date</label>
-                        <input type="date" id="bill-date" name="bill-date" class="form-control" required>
-                    </div>
+
+            <form action="/addbill" method="post">
+                <div class="form-group mb-2">
+                    <label for="service-list">Service</label>
+                    <select id="service-list" name="service-list" class="form-control">
+                        {{range .Services}}
+                            <option value="{{index . 0}}">{{index . 1}}</option>
+                        {{end}}
+                    </select>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <button type="submit" class="btn btn-primary">Add bill</button>
-                    <a href="/service">Go to Service Page</a>
+                <div class="form-group mb-2">
+                    <label for="bill-date">Date</label>
+                    <input type="date" id="bill-date" name="bill-date" class="form-control" required>
                 </div>
-            </div>
-        </form>
+                <button type="submit" class="form-control btn btn-primary">Add bill</button>
+            </form>
+        </div>
+
+        <h1>Bills</h1>
 
         <table class="table">
             <thead>
