@@ -58,6 +58,7 @@ func main() {
 	http.HandleFunc("/deletebill/", deleteBillHandler)
 	http.HandleFunc("/service", serviceHandler)
 	http.HandleFunc("/addservice", addServiceHandler)
+	http.HandleFunc("/deleteservice/", deleteServiceHandler)
     http.ListenAndServe(":8080", nil)
 }
 
@@ -263,4 +264,27 @@ func deleteBillHandler(w http.ResponseWriter, r *http.Request) {
 	databaseDisconnect()
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func deleteServiceHandler(w http.ResponseWriter, r *http.Request) {
+	databaseConnect()
+
+	idStr := r.URL.Path[len("/deleteservice/"):]
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec("DELETE FROM services WHERE id = ?", id)
+	if err != nil {
+		http.Error(w, "Failed to delete item", http.StatusInternalServerError)
+		return
+	}
+
+	// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
+
+	databaseDisconnect()
+
+	http.Redirect(w, r, "/service", http.StatusSeeOther)
 }
