@@ -6,6 +6,7 @@ import (
     "log"
 	"html/template"
     "net/http"
+	"strconv"
 
     "github.com/go-sql-driver/mysql"
 )
@@ -54,6 +55,7 @@ func main() {
 
     http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/addbill", addBillHandler)
+	http.HandleFunc("/deletebill/", deleteBillHandler)
 	http.HandleFunc("/service", serviceHandler)
 	http.HandleFunc("/addservice", addServiceHandler)
     http.ListenAndServe(":8080", nil)
@@ -238,4 +240,27 @@ func (d *PageData) insertBillIntoData(id int, service int, date string) {
 	row1 := []interface{}{id, service, date}
 
 	d.Bills = append(d.Bills, row1)
+}
+
+func deleteBillHandler(w http.ResponseWriter, r *http.Request) {
+	databaseConnect()
+
+	idStr := r.URL.Path[len("/deletebill/"):]
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec("DELETE FROM bills WHERE id = ?", id)
+	if err != nil {
+		http.Error(w, "Failed to delete item", http.StatusInternalServerError)
+		return
+	}
+
+	// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
+
+	databaseDisconnect()
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
