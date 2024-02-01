@@ -73,7 +73,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	data.getServicesData()
 	data.getBillsData()
 
-	tmpl, err := template.ParseFiles("pages/index.html")
+	tmpl, err := template.ParseFiles("pages/index.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)
@@ -126,7 +126,7 @@ func serviceHandler(w http.ResponseWriter, r *http.Request) {
 
 	data.getServicesData()
 
-	tmpl, err := template.ParseFiles("pages/service.html")
+	tmpl, err := template.ParseFiles("pages/service.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)
