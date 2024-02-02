@@ -5,7 +5,6 @@ import (
 	"html/template"
     "net/http"
 	"fmt"
-	"strconv"
 )
 
 type IndexPageData struct {
@@ -116,38 +115,13 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	DatabaseConnect()
 
 	sID := r.FormValue("service-list")
-	billDate := r.FormValue("bill-date")
 
-	query := "INSERT INTO bills (service, date) VALUES (?, ?)"
-	DB.QueryRow(query, sID, billDate)
+	DB.QueryRow("INSERT INTO bills (service) VALUES (?)", sID)
 
 	fmt.Println("Bill added")
 
 	DatabaseDisconnect()
 
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
-func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
-	DatabaseConnect()
-
-	idStr := r.URL.Path[len("/deletebill/"):]
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
-		return
-	}
-
-	_, err = DB.Exec("DELETE FROM bills WHERE id = ?", id)
-	if err != nil {
-		http.Error(w, "Failed to delete item", http.StatusInternalServerError)
-		return
-	}
-
-	// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
-
-	DatabaseDisconnect()
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
