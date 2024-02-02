@@ -215,7 +215,7 @@ func (d *PageData) insertServiceIntoData(id int, name string, price float32) {
 func (d *PageData) getBillsData() {
 	databaseConnect()
 
-	rows, err := db.Query("SELECT id, service, date FROM bills")
+	rows, err := db.Query("SELECT bills.id, services.name, services.price, bills.date FROM bills INNER JOIN services ON bills.service = services.id")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -223,16 +223,17 @@ func (d *PageData) getBillsData() {
 
 	for rows.Next() {
 		var billID int
-		var billService int
+		var serviceName string
+		var servicesPrice float32
 		var billDate string
 
-		err := rows.Scan(&billID, &billService, &billDate)
+		err := rows.Scan(&billID, &serviceName, &servicesPrice, &billDate)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		d.insertBillIntoData(billID, billService, billDate)
+		d.insertBillIntoData(billID, serviceName, servicesPrice, billDate)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -242,8 +243,8 @@ func (d *PageData) getBillsData() {
 	databaseDisconnect()
 }
 
-func (d *PageData) insertBillIntoData(id int, service int, date string) {
-	row1 := []interface{}{id, service, date}
+func (d *PageData) insertBillIntoData(id int, service string, price float32, date string) {
+	row1 := []interface{}{id, service, price, date}
 
 	d.Bills = append(d.Bills, row1)
 }

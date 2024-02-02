@@ -8,6 +8,15 @@
 
         <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico">
 
+        <style>
+            .list-group {
+                max-height: 300px;
+                margin-bottom: 10px;
+                overflow: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+        </style>
+
         <title>{{.Title}}</title>
     </head>
     <body>
@@ -19,46 +28,52 @@
         </div>
 
         <div class="container" style="width: 50%;">
-            <div class="text-center">
-                <img class="rounded" src="/static/assets/logo.png">
+            <div class="row">
+                <div class="text-center">
+                    <img class="rounded" src="/static/assets/logo.png">
+                </div>
+    
+                <form action="/addbill" method="post">
+                    <div class="form-group mb-2">
+                        <label for="service-list">Service</label>
+                        <select id="service-list" name="service-list" class="form-control">
+                            {{range .Services}}
+                                <option value="{{index . 0}}">{{index . 1}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="bill-date">Date</label>
+                        <input type="date" id="bill-date" name="bill-date" class="form-control" required>
+                    </div>
+                    <button type="submit" class="form-control btn btn-primary">Add bill</button>
+                </form>
             </div>
 
-            <form action="/addbill" method="post">
-                <div class="form-group mb-2">
-                    <label for="service-list">Service</label>
-                    <select id="service-list" name="service-list" class="form-control">
-                        {{range .Services}}
-                            <option value="{{index . 0}}">{{index . 1}}</option>
-                        {{end}}
-                    </select>
+            <div class="row">
+                <div class="panel panel-primary" id="result_panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Bills</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            {{range .Bills}}
+
+                            <li class="list-group-item">
+                                <p>ID: {{index . 0}} Service: {{index . 1}} Price: {{index . 2}} Date: {{index . 3}}</p> <button class="btn btn-primary" onclick="showDeleteAlert('{{index . 0}}')">Delete</button>
+                            </li>
+
+                            {{end}}
+                        </ul>
+                    </div>
                 </div>
-                <div class="form-group mb-2">
-                    <label for="bill-date">Date</label>
-                    <input type="date" id="bill-date" name="bill-date" class="form-control" required>
-                </div>
-                <button type="submit" class="form-control btn btn-primary">Add bill</button>
-            </form>
+            </div>
+
         </div>
-
-        <h1>Bills</h1>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Service</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Action</th>
-                </tr>
-                {{range .Bills}}
-                    <tr><th scope="col">{{index . 0}}</th><th scope="col">{{index . 1}}</th><th scope="col">{{index . 2}}</th><th><button class="btn btn-primary" onclick="showDeleteAlert('{{index . 0}}')">Delete</button></th></tr>
-                {{end}}
-            </thead>
-        </table>
 
         <script>
 			function showDeleteAlert(id) {
-				var result = window.confirm("Are you sure you want to delete this bill?");
+				var result = window.confirm("Are you sure you want to delete this item?");
 				if (result) {
 					window.location.href = "/deletebill/" + id;
 				}
