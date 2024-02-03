@@ -58,7 +58,7 @@
                             {{range .Services}}
     
                             <li class="list-group-item">
-                                <p>ID: {{index . 0}} Name: {{index . 1}} Price: {{index . 2}}</p>
+                                <p>ID: {{index . 0}} Name: {{index . 1}} Price: {{index . 2}}</p> <button class="btn btn-primary" onclick="showDeleteAlert('{{index . 0}}')">Delete</button>
                             </li>
     
                             {{end}}
@@ -68,6 +68,15 @@
             </div>
 
         </div>
+
+        <script>
+			function showDeleteAlert(id) {
+				var result = window.confirm("Are you sure you want to delete this item?");
+				if (result) {
+					window.location.href = "/deleteservice/" + id;
+				}
+			}
+		</script>
 
         <script src="/static/bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>
     </body>

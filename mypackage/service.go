@@ -5,6 +5,7 @@ import (
 	"html/template"
     "net/http"
 	"fmt"
+	"strconv"
 )
 
 type ServicePageData struct {
@@ -92,6 +93,29 @@ func AddServiceHandler(w http.ResponseWriter, r *http.Request) {
 
 	DatabaseDisconnect()
 
+
+	http.Redirect(w, r, "/service", http.StatusSeeOther)
+}
+
+func DeleteServiceHandler(w http.ResponseWriter, r *http.Request) {
+	DatabaseConnect()
+
+	idStr := r.URL.Path[len("/deleteservice/"):]
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	_, err = DB.Exec("DELETE FROM services WHERE id = ?", id)
+	if err != nil {
+		http.Error(w, "Failed to delete item", http.StatusInternalServerError)
+		return
+	}
+
+	// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
+
+	DatabaseDisconnect()
 
 	http.Redirect(w, r, "/service", http.StatusSeeOther)
 }
