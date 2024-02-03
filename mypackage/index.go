@@ -116,10 +116,8 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	DatabaseConnect()
 
 	sID := r.FormValue("service-list")
-	billDate := r.FormValue("bill-date")
 
-	query := "INSERT INTO bills (service, date) VALUES (?, ?)"
-	DB.QueryRow(query, sID, billDate)
+	DB.QueryRow("INSERT INTO bills (service) VALUES (?)", sID)
 
 	fmt.Println("Bill added")
 
