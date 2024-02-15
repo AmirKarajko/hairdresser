@@ -12,7 +12,7 @@ type LoginPageData struct {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	data := IndexPageData {
+	data := LoginPageData {
 		Title: "Hairdresser | Login",
 		Content: "This is a hairdresser web application.",
 	}
