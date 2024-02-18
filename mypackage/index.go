@@ -16,6 +16,16 @@ type IndexPageData struct {
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
+
+	session, _ := cookieStore().Get(r, "session-name")
+
+	authenticated := session.Values["auth"]
+
+	if authenticated == false {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	}
+	
+
 	data := IndexPageData {
 		Title: "Hairdresser",
 		Content: "This is a hairdresser web application.",
