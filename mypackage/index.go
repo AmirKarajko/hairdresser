@@ -23,35 +23,35 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	if authenticated == false {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
-	}
+	} else {
+
+		data := IndexPageData {
+			Title: "Hairdresser",
+			Content: "This is a hairdresser web application.",
+			Services: [][]interface{}{
+			},
+			Bills: [][]interface{}{
+			},
+		}
 	
-
-	data := IndexPageData {
-		Title: "Hairdresser",
-		Content: "This is a hairdresser web application.",
-		Services: [][]interface{}{
-		},
-		Bills: [][]interface{}{
-		},
-	}
-
-	data.GetServicesData()
-	data.GetBillsData()
-
-	tmpl, err := template.ParseFiles("pages/index.html", "pages/navbar.html")
-
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	err = tmpl.Execute(w, data)
-
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		data.GetServicesData()
+		data.GetBillsData()
+	
+		tmpl, err := template.ParseFiles("pages/index.html", "pages/navbar.html")
+	
+		if err != nil {
+			log.Fatal(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	
+		err = tmpl.Execute(w, data)
+	
+		if err != nil {
+			log.Fatal(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 	}
 }
 

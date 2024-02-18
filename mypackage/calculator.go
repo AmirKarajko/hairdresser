@@ -20,36 +20,35 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 
 	if authenticated == false {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
-	}
+	} else {
+		data := CalculatorPageData {
+			Title: "Hairdresser | Calculator",
+			Content: "This is a hairdresser web application.",
+			Result: 0,
+		}
 	
-
-	data := CalculatorPageData {
-		Title: "Hairdresser | Calculator",
-		Content: "This is a hairdresser web application.",
-		Result: 0,
-	}
-
-	if r.Method == http.MethodGet {
-		billDateFrom := r.FormValue("bill-date-from")
-		billDateTo := r.FormValue("bill-date-to")
-
-		data.Result = getCalculatorResult(billDateFrom, billDateTo)
-	}
-
-	tmpl, err := template.ParseFiles("pages/calculator.html", "pages/navbar.html")
-
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	err = tmpl.Execute(w, data)
-
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		if r.Method == http.MethodGet {
+			billDateFrom := r.FormValue("bill-date-from")
+			billDateTo := r.FormValue("bill-date-to")
+	
+			data.Result = getCalculatorResult(billDateFrom, billDateTo)
+		}
+	
+		tmpl, err := template.ParseFiles("pages/calculator.html", "pages/navbar.html")
+	
+		if err != nil {
+			log.Fatal(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	
+		err = tmpl.Execute(w, data)
+	
+		if err != nil {
+			log.Fatal(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
