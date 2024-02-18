@@ -12,24 +12,33 @@ type LoginPageData struct {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	data := LoginPageData {
-		Title: "Hairdresser | Login",
-		Content: "This is a hairdresser web application.",
-	}
+	
+	session, _ := cookieStore().Get(r, "session-name")
 
-	tmpl, err := template.ParseFiles("pages/login.html")
+	authenticated := session.Values["auth"]
 
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	err = tmpl.Execute(w, data)
-
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+	if authenticated == true {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	} else {
+		data := LoginPageData {
+			Title: "Hairdresser | Login",
+			Content: "This is a hairdresser web application.",
+		}
+	
+		tmpl, err := template.ParseFiles("pages/login.html")
+	
+		if err != nil {
+			log.Fatal(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	
+		err = tmpl.Execute(w, data)
+	
+		if err != nil {
+			log.Fatal(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 	}
 }

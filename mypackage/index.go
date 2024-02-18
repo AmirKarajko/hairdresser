@@ -16,32 +16,42 @@ type IndexPageData struct {
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	data := IndexPageData {
-		Title: "Hairdresser",
-		Content: "This is a hairdresser web application.",
-		Services: [][]interface{}{
-		},
-		Bills: [][]interface{}{
-		},
-	}
 
-	data.GetServicesData()
-	data.GetBillsData()
+	session, _ := cookieStore().Get(r, "session-name")
 
-	tmpl, err := template.ParseFiles("pages/index.html", "pages/navbar.html")
+	authenticated := session.Values["auth"]
 
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
+	if authenticated == false {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	} else {
 
-	err = tmpl.Execute(w, data)
-
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		data := IndexPageData {
+			Title: "Hairdresser",
+			Content: "This is a hairdresser web application.",
+			Services: [][]interface{}{
+			},
+			Bills: [][]interface{}{
+			},
+		}
+	
+		data.GetServicesData()
+		data.GetBillsData()
+	
+		tmpl, err := template.ParseFiles("pages/index.html", "pages/navbar.html")
+	
+		if err != nil {
+			log.Fatal(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	
+		err = tmpl.Execute(w, data)
+	
+		if err != nil {
+			log.Fatal(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 	}
 }
 
