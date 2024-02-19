@@ -13,6 +13,8 @@ type IndexPageData struct {
 	Content string
 	Services [][]interface{}
 	Bills [][]interface{}
+	Username string
+	PermissionDeleteBill bool
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,6 +22,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := cookieStore().Get(r, "session-name")
 
 	authenticated := session.Values["auth"]
+	username := session.Values["username"].(string)
+	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
 
 	if authenticated == false {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -32,6 +36,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 			},
 			Bills: [][]interface{}{
 			},
+			Username: username,
+			PermissionDeleteBill: permissionDeleteBill,
 		}
 	
 		data.GetServicesData()
@@ -138,24 +144,31 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
-	DatabaseConnect()
 
-	idStr := r.URL.Path[len("/deletebill/"):]
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
-		return
+	session, _ := cookieStore().Get(r, "session-name")
+	
+	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
+
+	if permissionDeleteBill {
+		DatabaseConnect()
+
+		idStr := r.URL.Path[len("/deletebill/"):]
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			http.Error(w, "Invalid ID", http.StatusBadRequest)
+			return
+		}
+	
+		_, err = DB.Exec("DELETE FROM bills WHERE id = ?", id)
+		if err != nil {
+			http.Error(w, "Failed to delete item", http.StatusInternalServerError)
+			return
+		}
+	
+		// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
+	
+		DatabaseDisconnect()
 	}
-
-	_, err = DB.Exec("DELETE FROM bills WHERE id = ?", id)
-	if err != nil {
-		http.Error(w, "Failed to delete item", http.StatusInternalServerError)
-		return
-	}
-
-	// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
-
-	DatabaseDisconnect()
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
