@@ -1,4 +1,4 @@
-package mypackage
+package packages
 
 import (
     "log"
@@ -6,6 +6,8 @@ import (
     "net/http"
 	"fmt"
 	"strconv"
+
+	"hairdresser/packages/database_package"
 )
 
 type IndexPageData struct {
@@ -19,7 +21,7 @@ type IndexPageData struct {
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, _ := cookieStore().Get(r, "session-name")
+	session, _ := database_package.CookieStore().Get(r, "session-name")
 
 	authenticated := session.Values["auth"]
 	username := session.Values["username"].(string)
@@ -62,9 +64,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (d *IndexPageData) GetBillsData() {
-	DatabaseConnect()
+	database_package.DatabaseConnect()
 
-	rows, err := DB.Query("SELECT bills.id, services.name, services.price, bills.date FROM bills INNER JOIN services ON bills.service = services.id")
+	rows, err := database_package.DB.Query("SELECT bills.id, services.name, services.price, bills.date FROM bills INNER JOIN services ON bills.service = services.id")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -89,13 +91,13 @@ func (d *IndexPageData) GetBillsData() {
 		log.Fatal(err)
 	}
 
-	DatabaseDisconnect()
+	database_package.DatabaseDisconnect()
 }
 
 func (d *IndexPageData) GetServicesData() {
-	DatabaseConnect()
+	database_package.DatabaseConnect()
 
-	rows, err := DB.Query("SELECT id, name, price FROM services")
+	rows, err := database_package.DB.Query("SELECT id, name, price FROM services")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -119,7 +121,7 @@ func (d *IndexPageData) GetServicesData() {
 		log.Fatal(err)
 	}
 
-	DatabaseDisconnect()
+	database_package.DatabaseDisconnect()
 }
 
 func AddBillHandler(w http.ResponseWriter, r *http.Request) {
@@ -129,15 +131,15 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	DatabaseConnect()
+	database_package.DatabaseConnect()
 
 	sID := r.FormValue("service-list")
 
-	DB.QueryRow("INSERT INTO bills (service) VALUES (?)", sID)
+	database_package.DB.QueryRow("INSERT INTO bills (service) VALUES (?)", sID)
 
 	fmt.Println("Bill added")
 
-	DatabaseDisconnect()
+	database_package.DatabaseDisconnect()
 
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -145,12 +147,12 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 
 func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, _ := cookieStore().Get(r, "session-name")
+	session, _ := database_package.CookieStore().Get(r, "session-name")
 	
 	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
 
 	if permissionDeleteBill {
-		DatabaseConnect()
+		database_package.DatabaseConnect()
 
 		idStr := r.URL.Path[len("/deletebill/"):]
 		id, err := strconv.Atoi(idStr)
@@ -159,7 +161,7 @@ func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	
-		_, err = DB.Exec("DELETE FROM bills WHERE id = ?", id)
+		_, err = database_package.DB.Exec("DELETE FROM bills WHERE id = ?", id)
 		if err != nil {
 			http.Error(w, "Failed to delete item", http.StatusInternalServerError)
 			return
@@ -167,7 +169,7 @@ func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
 	
 		// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
 	
-		DatabaseDisconnect()
+		database_package.DatabaseDisconnect()
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)

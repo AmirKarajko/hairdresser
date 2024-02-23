@@ -3,28 +3,29 @@ package main
 import (
     "net/http"
 
-	"hairdresser/mypackage"
+	"hairdresser/packages"
+	"hairdresser/packages/login_package"
 )
 
 func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-    http.HandleFunc("/", mypackage.IndexHandler)
+    http.HandleFunc("/", packages.IndexHandler)
 
-	http.HandleFunc("/admin", mypackage.AdminHandler)
+	http.HandleFunc("/admin", packages.AdminHandler)
 
-	http.HandleFunc("/login", mypackage.LoginHandler)
-	http.HandleFunc("/logout", mypackage.LogoutHandler)
-	http.HandleFunc("/login_service", mypackage.LoginServiceHandler)
+	http.HandleFunc("/login", login_package.LoginHandler)
+	http.HandleFunc("/logout", login_package.LogoutHandler)
+	http.HandleFunc("/login_service", login_package.LoginServiceHandler)
 
-	http.HandleFunc("/addbill", mypackage.AddBillHandler)
-	http.HandleFunc("/deletebill/", mypackage.DeleteBillHandler)
+	http.HandleFunc("/addbill", packages.AddBillHandler)
+	http.HandleFunc("/deletebill/", packages.DeleteBillHandler)
 
-	http.HandleFunc("/service", mypackage.ServiceHandler)
-	http.HandleFunc("/addservice", mypackage.AddServiceHandler)
-	http.HandleFunc("/deleteservice/", mypackage.DeleteServiceHandler)
+	http.HandleFunc("/service", packages.ServiceHandler)
+	http.HandleFunc("/addservice", packages.AddServiceHandler)
+	http.HandleFunc("/deleteservice/", packages.DeleteServiceHandler)
 
-	http.HandleFunc("/calculator", mypackage.CalculatorHandler)
+	http.HandleFunc("/calculator", packages.CalculatorHandler)
 
     http.ListenAndServe(":8080", nil)
 }

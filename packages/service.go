@@ -1,4 +1,4 @@
-package mypackage
+package packages
 
 import (
     "log"
@@ -6,6 +6,8 @@ import (
     "net/http"
 	"fmt"
 	"strconv"
+
+	"hairdresser/packages/database_package"
 )
 
 type ServicePageData struct {
@@ -18,7 +20,7 @@ type ServicePageData struct {
 
 func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 	
-	session, _ := cookieStore().Get(r, "session-name")
+	session, _ := database_package.CookieStore().Get(r, "session-name")
 
 	authenticated := session.Values["auth"]
 	username := session.Values["username"].(string)
@@ -57,9 +59,9 @@ func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (d *ServicePageData) GetServicesData() {
-	DatabaseConnect()
+	database_package.DatabaseConnect()
 
-	rows, err := DB.Query("SELECT id, name, price FROM services")
+	rows, err := database_package.DB.Query("SELECT id, name, price FROM services")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -83,7 +85,7 @@ func (d *ServicePageData) GetServicesData() {
 		log.Fatal(err)
 	}
 
-	DatabaseDisconnect()
+	database_package.DatabaseDisconnect()
 }
 
 func AddServiceHandler(w http.ResponseWriter, r *http.Request) {
@@ -93,24 +95,24 @@ func AddServiceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	DatabaseConnect()
+	database_package.DatabaseConnect()
 
 	sName := r.FormValue("service-name")
 	sPrice := r.FormValue("service-price")
 
 	query := "INSERT INTO services (name, price) VALUES (?, ?)"
-	DB.QueryRow(query, sName, sPrice)
+	database_package.DB.QueryRow(query, sName, sPrice)
 
 	fmt.Println("Service added")
 
-	DatabaseDisconnect()
+	database_package.DatabaseDisconnect()
 
 
 	http.Redirect(w, r, "/service", http.StatusSeeOther)
 }
 
 func DeleteServiceHandler(w http.ResponseWriter, r *http.Request) {
-	DatabaseConnect()
+	database_package.DatabaseConnect()
 
 	idStr := r.URL.Path[len("/deleteservice/"):]
 	id, err := strconv.Atoi(idStr)
@@ -119,7 +121,7 @@ func DeleteServiceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = DB.Exec("DELETE FROM services WHERE id = ?", id)
+	_, err = database_package.DB.Exec("DELETE FROM services WHERE id = ?", id)
 	if err != nil {
 		http.Error(w, "Failed to delete item", http.StatusInternalServerError)
 		return
@@ -127,7 +129,7 @@ func DeleteServiceHandler(w http.ResponseWriter, r *http.Request) {
 
 	// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
 
-	DatabaseDisconnect()
+	database_package.DatabaseDisconnect()
 
 	http.Redirect(w, r, "/service", http.StatusSeeOther)
 }

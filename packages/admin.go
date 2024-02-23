@@ -1,9 +1,11 @@
-package mypackage
+package packages
 
 import (
     "log"
 	"html/template"
     "net/http"
+
+	"hairdresser/packages/database_package"
 )
 
 type AdminPageData struct {
@@ -14,7 +16,7 @@ type AdminPageData struct {
 
 func AdminHandler(w http.ResponseWriter, r *http.Request) {
 	
-	session, _ := cookieStore().Get(r, "session-name")
+	session, _ := database_package.CookieStore().Get(r, "session-name")
 
 	authenticated := session.Values["auth"]
 	username := session.Values["username"].(string)

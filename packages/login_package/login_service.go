@@ -1,8 +1,10 @@
-package mypackage
+package login_package
 
 import (
 	"log"
     "net/http"
+
+	"hairdresser/packages/database_package"
 )
 
 func LoginServiceHandler(w http.ResponseWriter, r *http.Request) {
@@ -11,7 +13,7 @@ func LoginServiceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	DatabaseConnect()
+	database_package.DatabaseConnect()
 
 	var user string
 	var pass string
@@ -20,11 +22,11 @@ func LoginServiceHandler(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
-	DB.QueryRow("SELECT username, password, permission_delete_bill FROM users WHERE username = ? AND password = ?", username, password).Scan(&user, &pass, &permissionDeleteBill)
+	database_package.DB.QueryRow("SELECT username, password, permission_delete_bill FROM users WHERE username = ? AND password = ?", username, password).Scan(&user, &pass, &permissionDeleteBill)
 
 	if (user == username && pass == password) {
 
-		session, _ := cookieStore().Get(r, "session-name")
+		session, _ := database_package.CookieStore().Get(r, "session-name")
 
 		session.Values["username"] = user
 		session.Values["auth"] = true
@@ -38,5 +40,5 @@ func LoginServiceHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 	}
 
-	DatabaseDisconnect()
+	database_package.DatabaseDisconnect()
 }
