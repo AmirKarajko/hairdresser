@@ -11,6 +11,8 @@ func main() {
 
     http.HandleFunc("/", mypackage.IndexHandler)
 
+	http.HandleFunc("/admin", mypackage.AdminHandler)
+
 	http.HandleFunc("/login", mypackage.LoginHandler)
 	http.HandleFunc("/logout", mypackage.LogoutHandler)
 	http.HandleFunc("/login_service", mypackage.LoginServiceHandler)

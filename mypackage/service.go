@@ -13,6 +13,7 @@ type ServicePageData struct {
 	Content string
 	Services [][]interface{}
 	Bills [][]interface{}
+	Username string
 }
 
 func ServiceHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,6 +21,7 @@ func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := cookieStore().Get(r, "session-name")
 
 	authenticated := session.Values["auth"]
+	username := session.Values["username"].(string)
 
 	if authenticated == false {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -31,6 +33,7 @@ func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 			},
 			Bills: [][]interface{}{
 			},
+			Username: username,
 		}
 	
 		data.GetServicesData()
