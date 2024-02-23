@@ -1,11 +1,13 @@
-package mypackage
+package login_package
 
 import (
     "net/http"
+
+	"hairdresser/packages/database_package"
 )
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := cookieStore().Get(r, "session-name")
+	session, _ := database_package.CookieStore().Get(r, "session-name")
 
 	session.Values["auth"] = false
 	delete(session.Values, "username")

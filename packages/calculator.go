@@ -1,9 +1,11 @@
-package mypackage
+package packages
 
 import (
     "log"
 	"html/template"
     "net/http"
+
+	"hairdresser/packages/database_package"
 )
 
 type CalculatorPageData struct {
@@ -15,7 +17,7 @@ type CalculatorPageData struct {
 
 func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 
-	session, _ := cookieStore().Get(r, "session-name")
+	session, _ := database_package.CookieStore().Get(r, "session-name")
 
 	authenticated := session.Values["auth"]
 	username := session.Values["username"].(string)
@@ -58,13 +60,13 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 func getCalculatorResult(billDateFrom string, billDateTo string) float32 {
 	var result float32
 
-	DatabaseConnect()
+	database_package.DatabaseConnect()
 
 	query := "SELECT SUM(services.price) AS result FROM services INNER JOIN bills ON bills.service = services.ID WHERE bills.date BETWEEN ? AND ?"
 	
-	DB.QueryRow(query, billDateFrom, billDateTo).Scan(&result)
+	database_package.DB.QueryRow(query, billDateFrom, billDateTo).Scan(&result)
 
-	DatabaseDisconnect()
+	database_package.DatabaseDisconnect()
 
 	return result
 }

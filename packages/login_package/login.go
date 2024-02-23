@@ -1,9 +1,11 @@
-package mypackage
+package login_package
 
 import (
     "log"
 	"html/template"
     "net/http"
+
+	"hairdresser/packages/database_package"
 )
 
 type LoginPageData struct {
@@ -13,7 +15,7 @@ type LoginPageData struct {
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	
-	session, _ := cookieStore().Get(r, "session-name")
+	session, _ := database_package.CookieStore().Get(r, "session-name")
 
 	authenticated := session.Values["auth"]
 
