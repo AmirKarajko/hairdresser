@@ -4,7 +4,6 @@ import (
     "log"
 	"html/template"
     "net/http"
-	"fmt"
 	"strconv"
 
 	"hairdresser/packages/database_package"
