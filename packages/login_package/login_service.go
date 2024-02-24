@@ -18,11 +18,12 @@ func LoginServiceHandler(w http.ResponseWriter, r *http.Request) {
 	var user string
 	var pass string
 	var permissionDeleteBill bool
+	var permissionDeleteService bool
 
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
-	database_package.DB.QueryRow("SELECT username, password, permission_delete_bill FROM users WHERE username = ? AND password = ?", username, password).Scan(&user, &pass, &permissionDeleteBill)
+	database_package.DB.QueryRow("SELECT username, password, permission_delete_bill, permission_delete_service FROM users WHERE username = ? AND password = ?", username, password).Scan(&user, &pass, &permissionDeleteBill, &permissionDeleteService)
 
 	if (user == username && pass == password) {
 
@@ -31,6 +32,7 @@ func LoginServiceHandler(w http.ResponseWriter, r *http.Request) {
 		session.Values["username"] = user
 		session.Values["auth"] = true
 		session.Values["permission_delete_bill"] = permissionDeleteBill
+		session.Values["permission_delete_service"] = permissionDeleteService
 		session.Save(r, w)
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
