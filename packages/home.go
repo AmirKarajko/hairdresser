@@ -10,7 +10,7 @@ import (
 	"hairdresser/packages/database_package"
 )
 
-type IndexPageData struct {
+type HomePageData struct {
 	Title string
 	Content string
 	Services [][]interface{}
@@ -19,7 +19,7 @@ type IndexPageData struct {
 	PermissionDeleteBill bool
 }
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	authenticated := session.Values["auth"]
 	username := session.Values["username"].(string)
@@ -29,7 +29,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 
-	data := IndexPageData {
+	data := HomePageData {
 		Title: "Hairdresser",
 		Content: "This is a hairdresser web application.",
 		Services: [][]interface{}{
@@ -43,7 +43,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	data.GetServicesData()
 	data.GetBillsData()
 
-	tmpl, err := template.ParseFiles("pages/index.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/home.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)
@@ -60,28 +60,29 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (d *IndexPageData) GetBillsData() {
+func (d *HomePageData) GetBillsData() {
 	database_package.DatabaseConnect()
 
-	rows, err := database_package.DB.Query("SELECT bills.id, services.name, services.price, bills.date FROM bills INNER JOIN services ON bills.service = services.id")
+	rows, err := database_package.DB.Query("SELECT users.id, bills.id, services.name, services.price, bills.date FROM bills INNER JOIN services ON bills.service = services.id INNER JOIN users ON bills.user = users.id")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
+		var userID int
 		var billID int
 		var serviceName string
 		var servicesPrice float32
 		var billDate string
 
-		err := rows.Scan(&billID, &serviceName, &servicesPrice, &billDate)
+		err := rows.Scan(&userID, &billID, &serviceName, &servicesPrice, &billDate)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		d.InsertBillIntoData(billID, serviceName, servicesPrice, billDate)
+		d.InsertBillIntoData(billID, serviceName, servicesPrice, billDate, userID)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -91,7 +92,13 @@ func (d *IndexPageData) GetBillsData() {
 	database_package.DatabaseDisconnect()
 }
 
-func (d *IndexPageData) GetServicesData() {
+func (d *HomePageData) InsertBillIntoData(id int, service string, price float32, date string, userId int) {
+	row1 := []interface{}{id, service, price, date, userId}
+
+	d.Bills = append(d.Bills, row1)
+}
+
+func (d *HomePageData) GetServicesData() {
 	database_package.DatabaseConnect()
 
 	rows, err := database_package.DB.Query("SELECT id, name, price FROM services")
@@ -121,31 +128,33 @@ func (d *IndexPageData) GetServicesData() {
 	database_package.DatabaseDisconnect()
 }
 
+func (d *HomePageData) InsertServiceIntoData(id int, name string, price float32) {
+	row1 := []interface{}{id, name, price}
+
+	d.Services = append(d.Services, row1)
+}
+
 func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-
 	database_package.DatabaseConnect()
 
+	session, _ := database_package.CookieStore().Get(r, "session-name")
+	username := session.Values["username"].(string)
 	sID := r.FormValue("service-list")
 
-	database_package.DB.QueryRow("INSERT INTO bills (service) VALUES (?)", sID)
-
-	fmt.Println("Bill added")
+	database_package.DB.QueryRow("INSERT INTO bills (user, service) VALUES ((SELECT ID FROM users WHERE username = ?), ?)", username, sID)
 
 	database_package.DatabaseDisconnect()
-
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
-
 	session, _ := database_package.CookieStore().Get(r, "session-name")
-	
 	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
 
 	if permissionDeleteBill {
@@ -170,16 +179,4 @@ func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
-func (d *IndexPageData) InsertBillIntoData(id int, service string, price float32, date string) {
-	row1 := []interface{}{id, service, price, date}
-
-	d.Bills = append(d.Bills, row1)
-}
-
-func (d *IndexPageData) InsertServiceIntoData(id int, name string, price float32) {
-	row1 := []interface{}{id, name, price}
-
-	d.Services = append(d.Services, row1)
 }

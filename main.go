@@ -12,7 +12,7 @@ func main() {
 
 	http.HandleFunc("/", RedirectHandler)
 
-    http.HandleFunc("/home", packages.IndexHandler)
+    http.HandleFunc("/home", packages.HomeHandler)
 
 	http.HandleFunc("/admin", packages.AdminHandler)
 
