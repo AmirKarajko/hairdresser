@@ -10,7 +10,9 @@ import (
 func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-    http.HandleFunc("/", packages.IndexHandler)
+	http.HandleFunc("/", RedirectHandler)
+
+    http.HandleFunc("/home", packages.IndexHandler)
 
 	http.HandleFunc("/admin", packages.AdminHandler)
 
@@ -27,4 +29,8 @@ func main() {
 	http.HandleFunc("/calculator", packages.CalculatorHandler)
 
     http.ListenAndServe(":8080", nil)
+}
+
+func RedirectHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/login", http.StatusFound)
 }

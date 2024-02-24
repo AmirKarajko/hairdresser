@@ -20,46 +20,43 @@ type IndexPageData struct {
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-
 	session, _ := database_package.CookieStore().Get(r, "session-name")
-
 	authenticated := session.Values["auth"]
 	username := session.Values["username"].(string)
 	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
 
 	if authenticated == false {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
-	} else {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
 
-		data := IndexPageData {
-			Title: "Hairdresser",
-			Content: "This is a hairdresser web application.",
-			Services: [][]interface{}{
-			},
-			Bills: [][]interface{}{
-			},
-			Username: username,
-			PermissionDeleteBill: permissionDeleteBill,
-		}
-	
-		data.GetServicesData()
-		data.GetBillsData()
-	
-		tmpl, err := template.ParseFiles("pages/index.html", "pages/navbar.html")
-	
-		if err != nil {
-			log.Fatal(err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
-	
-		err = tmpl.Execute(w, data)
-	
-		if err != nil {
-			log.Fatal(err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
+	data := IndexPageData {
+		Title: "Hairdresser",
+		Content: "This is a hairdresser web application.",
+		Services: [][]interface{}{
+		},
+		Bills: [][]interface{}{
+		},
+		Username: username,
+		PermissionDeleteBill: permissionDeleteBill,
+	}
+
+	data.GetServicesData()
+	data.GetBillsData()
+
+	tmpl, err := template.ParseFiles("pages/index.html", "pages/navbar.html")
+
+	if err != nil {
+		log.Fatal(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, data)
+
+	if err != nil {
+		log.Fatal(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 }
 
