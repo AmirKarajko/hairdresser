@@ -56,13 +56,13 @@
                             {{if or (eq .Username "admin") .PermissionDeleteBill}}
                                 {{range .Bills}}
                                 <li class="list-group-item">
-                                    <p>ID: {{index . 0}} Service: {{index . 1}} Price: {{index . 2}} Date: {{index . 3}}</p> <button class="btn btn-primary" onclick="showDeleteAlert('{{index . 0}}')">Delete</button>
+                                    <p>ID: {{index . 0}} SERVICE: {{index . 1}} PRICE: {{index . 2}} DATE: {{index . 3}} USER: {{index . 4}}</p> <button class="btn btn-primary" onclick="showDeleteAlert('{{index . 0}}')">Delete</button>
                                 </li>
                                 {{end}}
                             {{else}}
                                 {{range .Bills}}
                                 <li class="list-group-item">
-                                    <p>ID: {{index . 0}} Service: {{index . 1}} Price: {{index . 2}} Date: {{index . 3}}</p>
+                                    <p>ID: {{index . 0}} SERVICE: {{index . 1}} PRICE: {{index . 2}} DATE: {{index . 3}} USER: {{index . 4}}</p>
                                 </li>
                                 {{end}}
                             {{end}}
