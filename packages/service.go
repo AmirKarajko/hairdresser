@@ -16,6 +16,7 @@ type ServicePageData struct {
 	Services [][]interface{}
 	Bills [][]interface{}
 	Username string
+	PermissionDeleteService bool
 }
 
 func ServiceHandler(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +25,7 @@ func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 
 	authenticated := session.Values["auth"]
 	username := session.Values["username"].(string)
+	permissionDeleteService := session.Values["permission_delete_service"].(bool)
 
 	if authenticated == false {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -36,6 +38,7 @@ func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 			Bills: [][]interface{}{
 			},
 			Username: username,
+			PermissionDeleteService: permissionDeleteService,
 		}
 	
 		data.GetServicesData()
@@ -112,24 +115,30 @@ func AddServiceHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteServiceHandler(w http.ResponseWriter, r *http.Request) {
-	database_package.DatabaseConnect()
+	session, _ := database_package.CookieStore().Get(r, "session-name")
+	
+	permissionDeleteService := session.Values["permission_delete_service"].(bool)
 
-	idStr := r.URL.Path[len("/deleteservice/"):]
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
-		return
+	if permissionDeleteService {
+		database_package.DatabaseConnect()
+
+		idStr := r.URL.Path[len("/deleteservice/"):]
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			http.Error(w, "Invalid ID", http.StatusBadRequest)
+			return
+		}
+	
+		_, err = database_package.DB.Exec("DELETE FROM services WHERE id = ?", id)
+		if err != nil {
+			http.Error(w, "Failed to delete item", http.StatusInternalServerError)
+			return
+		}
+	
+		// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
+	
+		database_package.DatabaseDisconnect()
 	}
-
-	_, err = database_package.DB.Exec("DELETE FROM services WHERE id = ?", id)
-	if err != nil {
-		http.Error(w, "Failed to delete item", http.StatusInternalServerError)
-		return
-	}
-
-	// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
-
-	database_package.DatabaseDisconnect()
 
 	http.Redirect(w, r, "/service", http.StatusSeeOther)
 }
