@@ -28,7 +28,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		database_package.DB.QueryRow("SELECT username, password, permission_delete_bill, permission_delete_service FROM users WHERE username = ? AND password = ?", username, password).Scan(&user, &pass, &permissionDeleteBill, &permissionDeleteService)
 	
 		if (user == username && pass == password) {
-	
 			session, _ := database_package.CookieStore().Get(r, "session-name")
 	
 			session.Values["username"] = user
@@ -37,11 +36,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			session.Values["permission_delete_service"] = permissionDeleteService
 			session.Save(r, w)
 	
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			http.Redirect(w, r, "/home", http.StatusSeeOther)
 		} else {
 			log.Println("Username or password is incorrect")
 	
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
 		}
 	
 		database_package.DatabaseDisconnect()
@@ -52,7 +51,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	authenticated := session.Values["auth"]
 
 	if authenticated == true {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/home", http.StatusSeeOther)
 	}
 	
 	data := LoginPageData {
