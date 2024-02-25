@@ -12,6 +12,7 @@ type AdminPageData struct {
 	Title string
 	Content string
 	Username string
+	Users [][]interface{}
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +31,11 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 			Title: "Hairdresser | Admin",
 			Content: "This is a hairdresser web application.",
 			Username: username,
+			Users: [][]interface{}{
+			},
 		}
+
+		data.GetUsersData()
 	
 		tmpl, err := template.ParseFiles("pages/admin.html", "pages/navbar.html")
 	
@@ -48,4 +53,39 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+}
+
+func (d *AdminPageData) GetUsersData() {
+	database_package.DatabaseConnect()
+
+	rows, err := database_package.DB.Query("SELECT id, username FROM users")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var userID int
+		var userUsername string
+
+		err := rows.Scan(&userID, &userUsername)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		d.InsertUserIntoData(userID, userUsername)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	database_package.DatabaseDisconnect()
+}
+
+func (d *AdminPageData) InsertUserIntoData(id int, username string) {
+	row1 := []interface{}{id, username}
+
+	d.Users = append(d.Users, row1)
 }
