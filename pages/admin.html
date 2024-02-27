@@ -36,7 +36,9 @@
                     <ul class="list-group">
                         {{range .Users}}
                         <li class="list-group-item">
-                            <p>ID: {{index . 0}} USERNAME: {{index . 1}}</p> <button class="btn btn-primary" onclick="showDeleteAlert('{{index . 0}}')">Delete</button>
+                            <p>ID: {{index . 0}} USERNAME: {{index . 1}}</p>
+                            <button class="btn btn-primary" onclick="openEditUserPage('{{index . 0}}')">Edit</button>
+                            <button class="btn btn-primary" onclick="showDeleteAlert('{{index . 0}}')">Delete</button>
                         </li>
                         {{end}}
                     </ul>
@@ -45,6 +47,10 @@
         </div>
 
         <script>
+            function openEditUserPage(id) {
+                window.location.href = "/edituser/" + id;
+            }
+
             function showDeleteAlert(id) {
                 var result = window.confirm("Are you sure you want to delete this item?");
                 if (result) {
