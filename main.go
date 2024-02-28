@@ -5,6 +5,7 @@ import (
 
 	"hairdresser/packages"
 	"hairdresser/packages/login_package"
+	"hairdresser/packages/users_package"
 )
 
 func main() {
@@ -15,6 +16,10 @@ func main() {
     http.HandleFunc("/home", packages.HomeHandler)
 
 	http.HandleFunc("/admin", packages.AdminHandler)
+	
+	http.HandleFunc("/add_user", users_package.AddUserHandler)
+	http.HandleFunc("/edit_user/", users_package.EditUserHandler)
+	http.HandleFunc("/delete_user/", users_package.DeleteUserHandler)
 
 	http.HandleFunc("/login", login_package.LoginHandler)
 	http.HandleFunc("/logout", login_package.LogoutHandler)
