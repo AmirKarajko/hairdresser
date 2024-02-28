@@ -17,9 +17,9 @@ func main() {
 
 	http.HandleFunc("/admin", packages.AdminHandler)
 	
-	http.HandleFunc("/adduser", users_package.AddUserHandler)
-	http.HandleFunc("/edituser/", users_package.EditUserHandler)
-	http.HandleFunc("/deleteuser/", users_package.DeleteUserHandler)
+	http.HandleFunc("/add_user", users_package.AddUserHandler)
+	http.HandleFunc("/edit_user/", users_package.EditUserHandler)
+	http.HandleFunc("/delete_user/", users_package.DeleteUserHandler)
 
 	http.HandleFunc("/login", login_package.LoginHandler)
 	http.HandleFunc("/logout", login_package.LogoutHandler)

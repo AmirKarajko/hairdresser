@@ -29,7 +29,7 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 
-	idStr := r.URL.Path[len("/edituser/"):]
+	idStr := r.URL.Path[len("/edit_user/"):]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid ID", http.StatusBadRequest)
@@ -58,7 +58,7 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 		Password: password,
 	}
 
-	tmpl, err := template.ParseFiles("pages/edituser.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/users/edit_user.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)

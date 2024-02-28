@@ -51,17 +51,17 @@
 
         <script>
             function openAddUserPage() {
-                window.location.href = "/adduser";
+                window.location.href = "/add_user";
             }
 
             function openEditUserPage(id) {
-                window.location.href = "/edituser/" + id;
+                window.location.href = "/edit_user/" + id;
             }
 
             function showDeleteAlert(id) {
-                var result = window.confirm("Are you sure you want to delete this item?");
+                var result = window.confirm("Are you sure you want to delete user " + id + "?");
                 if (result) {
-                    window.location.href = "/deleteuser/" + id;
+                    window.location.href = "/delete_user/" + id;
                 }
             }
         </script>

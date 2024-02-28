@@ -17,7 +17,7 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	database_package.DatabaseConnect()
 
-	idStr := r.URL.Path[len("/deleteuser/"):]
+	idStr := r.URL.Path[len("/delete_user/"):]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid ID", http.StatusBadRequest)
@@ -26,7 +26,7 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = database_package.DB.Exec("DELETE FROM users WHERE id = ?", id)
 	if err != nil {
-		http.Error(w, "Failed to delete item", http.StatusInternalServerError)
+		http.Error(w, "Failed to delete user", http.StatusInternalServerError)
 		return
 	}
 

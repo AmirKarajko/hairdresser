@@ -39,7 +39,7 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 		Username: username,
 	}
 
-	tmpl, err := template.ParseFiles("pages/adduser.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/users/add_user.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)
