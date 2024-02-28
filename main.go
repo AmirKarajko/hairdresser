@@ -7,6 +7,7 @@ import (
 	"hairdresser/packages/login_package"
 	"hairdresser/packages/users_package"
 	"hairdresser/packages/bills_package"
+	"hairdresser/packages/services_package"
 )
 
 func main() {
@@ -29,8 +30,8 @@ func main() {
 	http.HandleFunc("/delete_bill/", bills_package.DeleteBillHandler)
 
 	http.HandleFunc("/service", packages.ServiceHandler)
-	http.HandleFunc("/addservice", packages.AddServiceHandler)
-	http.HandleFunc("/deleteservice/", packages.DeleteServiceHandler)
+	http.HandleFunc("/add_service", services_package.AddServiceHandler)
+	http.HandleFunc("/delete_service/", services_package.DeleteServiceHandler)
 
 	http.HandleFunc("/calculator", packages.CalculatorHandler)
 

@@ -33,7 +33,7 @@
                     <img class="rounded" src="/static/assets/logo.png">
                 </div>
     
-                <form action="/addservice" method="post">
+                <form action="/add_service" method="post">
                     <div class="form-group mb-2">
                         <label for="service-name">Name</label>
                         <input type="text" id="service-name" name="service-name" class="form-control" required>
@@ -78,9 +78,9 @@
         {{if or (eq .Username "admin") .PermissionDeleteService}}
         <script>
 			function showDeleteAlert(id) {
-				var result = window.confirm("Are you sure you want to delete this item?");
+				var result = window.confirm("Are you sure you want to delete service " + id + "?");
 				if (result) {
-					window.location.href = "/deleteservice/" + id;
+					window.location.href = "/delete_service/" + id;
 				}
 			}
 		</script>
