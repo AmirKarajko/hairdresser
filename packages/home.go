@@ -4,7 +4,6 @@ import (
     "log"
 	"html/template"
     "net/http"
-	"strconv"
 
 	"hairdresser/packages/database_package"
 )
@@ -131,51 +130,4 @@ func (d *HomePageData) InsertServiceIntoData(id int, name string, price float32)
 	row1 := []interface{}{id, name, price}
 
 	d.Services = append(d.Services, row1)
-}
-
-func AddBillHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	database_package.DatabaseConnect()
-
-	session, _ := database_package.CookieStore().Get(r, "session-name")
-	username := session.Values["username"].(string)
-	sID := r.FormValue("service-list")
-
-	database_package.DB.QueryRow("INSERT INTO bills (user, service) VALUES ((SELECT ID FROM users WHERE username = ?), ?)", username, sID)
-
-	database_package.DatabaseDisconnect()
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
-func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := database_package.CookieStore().Get(r, "session-name")
-	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
-
-	if permissionDeleteBill {
-		database_package.DatabaseConnect()
-
-		idStr := r.URL.Path[len("/deletebill/"):]
-		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			http.Error(w, "Invalid ID", http.StatusBadRequest)
-			return
-		}
-	
-		_, err = database_package.DB.Exec("DELETE FROM bills WHERE id = ?", id)
-		if err != nil {
-			http.Error(w, "Failed to delete item", http.StatusInternalServerError)
-			return
-		}
-	
-		// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
-	
-		database_package.DatabaseDisconnect()
-	}
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
