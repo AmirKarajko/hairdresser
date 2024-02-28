@@ -32,6 +32,9 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Users</h3>
                 </div>
+                <div>
+                    <button class="btn btn-primary" onclick="openAddUserPage()">Add new user</button>
+                </div>
                 <div class="panel-body">
                     <ul class="list-group">
                         {{range .Users}}
@@ -47,6 +50,10 @@
         </div>
 
         <script>
+            function openAddUserPage() {
+                window.location.href = "/adduser";
+            }
+
             function openEditUserPage(id) {
                 window.location.href = "/edituser/" + id;
             }
