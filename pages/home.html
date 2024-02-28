@@ -33,7 +33,7 @@
                     <img class="rounded" src="/static/assets/logo.png">
                 </div>
     
-                <form action="/addbill" method="post">
+                <form action="/add_bill" method="post">
                     <div class="form-group mb-2">
                         <label for="service-list">Service</label>
                         <select id="service-list" name="service-list" class="form-control">
@@ -76,9 +76,9 @@
         {{if or (eq .Username "admin") .PermissionDeleteBill}}
         <script>
             function showDeleteAlert(id) {
-                var result = window.confirm("Are you sure you want to delete this item?");
+                var result = window.confirm("Are you sure you want to delete bill " + id + "?");
                 if (result) {
-                    window.location.href = "/deletebill/" + id;
+                    window.location.href = "/delete_bill/" + id;
                 }
             }
         </script>
