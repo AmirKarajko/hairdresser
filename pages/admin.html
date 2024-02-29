@@ -39,9 +39,9 @@
                     <ul class="list-group">
                         {{range .Users}}
                         <li class="list-group-item">
-                            <p>ID: {{index . 0}} USERNAME: {{index . 1}}</p>
-                            <button class="btn btn-primary" onclick="openEditUserPage('{{index . 0}}')">Edit</button>
-                            <button class="btn btn-primary" onclick="showDeleteAlert('{{index . 0}}')">Delete</button>
+                            <p>ID: {{.ID}} USERNAME: {{.USERNAME}}</p>
+                            <button class="btn btn-primary" onclick="openEditUserPage('{{.ID}}')">Edit</button>
+                            <button class="btn btn-primary" onclick="showDeleteAlert('{{.ID}}')">Delete</button>
                         </li>
                         {{end}}
                     </ul>

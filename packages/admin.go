@@ -8,11 +8,18 @@ import (
 	"hairdresser/packages/database_package"
 )
 
+type UsersData struct {
+	ID int
+	USERNAME string
+}
+
+var Users []UsersData
+
 type AdminPageData struct {
 	Title string
 	Content string
 	Username string
-	Users [][]interface{}
+	Users []UsersData
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request) {
@@ -28,15 +35,14 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 
+	LoadUsersData()
+
 	data := AdminPageData {
 		Title: "Hairdresser | Admin",
 		Content: "This is a hairdresser web application.",
 		Username: username,
-		Users: [][]interface{}{
-		},
+		Users: Users,
 	}
-
-	data.GetUsersData()
 
 	tmpl, err := template.ParseFiles("pages/admin.html", "pages/navbar.html")
 
@@ -55,7 +61,9 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (d *AdminPageData) GetUsersData() {
+func LoadUsersData() {
+	Users = nil
+
 	database_package.DatabaseConnect()
 
 	rows, err := database_package.DB.Query("SELECT id, username FROM users")
@@ -65,16 +73,17 @@ func (d *AdminPageData) GetUsersData() {
 	defer rows.Close()
 
 	for rows.Next() {
-		var userID int
-		var userUsername string
+		var (
+			userID int
+			userUsername string
+		)
 
 		err := rows.Scan(&userID, &userUsername)
-
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		d.InsertUserIntoData(userID, userUsername)
+		Users = append(Users, UsersData{userID, userUsername})
 	}
 
 	if err := rows.Err(); err != nil {
@@ -82,10 +91,4 @@ func (d *AdminPageData) GetUsersData() {
 	}
 
 	database_package.DatabaseDisconnect()
-}
-
-func (d *AdminPageData) InsertUserIntoData(id int, username string) {
-	row1 := []interface{}{id, username}
-
-	d.Users = append(d.Users, row1)
 }
