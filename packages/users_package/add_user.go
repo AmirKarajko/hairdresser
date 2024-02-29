@@ -6,6 +6,7 @@ import (
     "net/http"
 
 	"hairdresser/packages/database_package"
+	"hairdresser/packages/utils_package"
 )
 
 type AddUserPageData struct {
@@ -16,21 +17,22 @@ type AddUserPageData struct {
 
 func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
+	isAuthenticated := session.Values["authenticated"].(bool)
 	username := session.Values["username"].(string)
+
+	if !isAuthenticated {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	}
 
 	if username != "admin" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 
 	if r.Method == http.MethodPost {
-		database_package.DatabaseConnect()
-
 		inputUsername := r.FormValue("username")
 		inputPassword := r.FormValue("password")
 
-		database_package.DB.QueryRow("INSERT INTO users (username, password, permission_delete_bill, permission_delete_service) VALUES (?, ?, 0, 0)", inputUsername, inputPassword)
-	
-		database_package.DatabaseDisconnect()
+		AddUser(inputUsername, inputPassword)
 	}
 
 	data := AddUserPageData {
@@ -54,4 +56,15 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+}
+
+func AddUser(username string, password string) {
+	hashedPassword := utils_package.HashPassword(password)
+
+	database_package.DatabaseConnect()
+	_, err := database_package.DB.Exec("INSERT INTO users (username, password, permission_delete_bill, permission_delete_service) VALUES (?, ?, 0, 0)", username, hashedPassword)
+	if err != nil {
+		log.Fatal(err)
+	}
+	database_package.DatabaseDisconnect()
 }

@@ -9,7 +9,12 @@ import (
 
 func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
+	isAuthenticated := session.Values["authenticated"].(bool)
 	username := session.Values["username"].(string)
+
+	if !isAuthenticated {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	}
 
 	if username != "admin" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)

@@ -19,12 +19,12 @@ type ServicePageData struct {
 
 func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
-	authenticated := session.Values["auth"]
+	isAuthenticated := session.Values["authenticated"].(bool)
 	username := session.Values["username"].(string)
 	permissionDeleteService := session.Values["permission_delete_service"].(bool)
 
-	if authenticated == false {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+	if !isAuthenticated {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 	}
 
 	data := ServicePageData {
