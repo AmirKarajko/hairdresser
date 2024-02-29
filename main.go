@@ -17,7 +17,7 @@ func main() {
 
     http.HandleFunc("/home", packages.HomeHandler)
 
-	http.HandleFunc("/admin", packages.AdminHandler)
+	http.HandleFunc("/users", users_package.UsersHandler)
 	
 	http.HandleFunc("/add_user", users_package.AddUserHandler)
 	http.HandleFunc("/edit_user/", users_package.EditUserHandler)
