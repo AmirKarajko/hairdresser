@@ -17,11 +17,11 @@ type CalculatorPageData struct {
 
 func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
-	authenticated := session.Values["auth"]
+	isAuthenticated := session.Values["authenticated"].(bool)
 	username := session.Values["username"].(string)
 
-	if authenticated == false {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+	if !isAuthenticated {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 	}
 
 	data := CalculatorPageData {

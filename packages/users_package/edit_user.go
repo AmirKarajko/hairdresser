@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"hairdresser/packages/database_package"
+	"hairdresser/packages/utils_package"
 )
 
 type EditUserPageData struct {
@@ -23,7 +24,12 @@ var password string
 
 func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
+	isAuthenticated := session.Values["authenticated"].(bool)
 	username := session.Values["username"].(string)
+
+	if !isAuthenticated {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	}
 
 	if username != "admin" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -36,18 +42,14 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Method == http.MethodPost {
-		database_package.DatabaseConnect()
+	GetUserData(id)
 
+	if r.Method == http.MethodPost {
 		inputUsername := r.FormValue("username")
 		inputPassword := r.FormValue("password")
 
-		database_package.DB.QueryRow("UPDATE users SET username = ?, password = ? WHERE id = ?", inputUsername, inputPassword, id)
-	
-		database_package.DatabaseDisconnect()
-	}
-
-	GetUserData(id)
+		UpdateUser(id, inputUsername, inputPassword)
+	}	
 
 	data := EditUserPageData {
 		Title: "Hairdresser | Edit User",
@@ -96,5 +98,16 @@ func GetUserData(id int) {
 		log.Fatal(err)
 	}
 
+	database_package.DatabaseDisconnect()
+}
+
+func UpdateUser(id int, username string, password string) {
+	hashedPassword := utils_package.HashPassword(password)
+
+	database_package.DatabaseConnect()
+	_, err := database_package.DB.Exec("UPDATE users SET username = ?, password = ? WHERE id = ?", username, hashedPassword, id)
+	if err != nil {
+		log.Fatal(err)
+	}
 	database_package.DatabaseDisconnect()
 }

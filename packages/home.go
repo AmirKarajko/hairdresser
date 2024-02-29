@@ -19,11 +19,11 @@ type HomePageData struct {
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
-	authenticated := session.Values["auth"]
+	isAuthenticated := session.Values["authenticated"].(bool)
 	username := session.Values["username"].(string)
 	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
 
-	if authenticated == false {
+	if !isAuthenticated {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 

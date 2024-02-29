@@ -9,7 +9,12 @@ import (
 
 func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
+	isAuthenticated := session.Values["authenticated"].(bool)
 	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
+
+	if !isAuthenticated {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	}
 
 	if permissionDeleteBill {
 		database_package.DatabaseConnect()
@@ -26,9 +31,7 @@ func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to delete bill", http.StatusInternalServerError)
 			return
 		}
-	
-		// fmt.Fprintf(w, "Item ID %d deleted successfully", id)
-	
+
 		database_package.DatabaseDisconnect()
 	}
 
