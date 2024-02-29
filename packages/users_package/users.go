@@ -1,4 +1,4 @@
-package packages
+package users_package
 
 import (
     "log"
@@ -15,14 +15,14 @@ type UsersData struct {
 
 var Users []UsersData
 
-type AdminPageData struct {
+type UsersPageData struct {
 	Title string
 	Content string
 	Username string
 	Users []UsersData
 }
 
-func AdminHandler(w http.ResponseWriter, r *http.Request) {
+func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
 	username := session.Values["username"].(string)
@@ -37,14 +37,14 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 
 	LoadUsersData()
 
-	data := AdminPageData {
-		Title: "Hairdresser | Admin",
+	data := UsersPageData {
+		Title: "Hairdresser | Users",
 		Content: "This is a hairdresser web application.",
 		Username: username,
 		Users: Users,
 	}
 
-	tmpl, err := template.ParseFiles("pages/admin.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/users/users.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)
