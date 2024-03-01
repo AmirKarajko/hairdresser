@@ -14,11 +14,10 @@ func AddServiceHandler(w http.ResponseWriter, r *http.Request) {
 
 	database_package.DatabaseConnect()
 
-	sName := r.FormValue("service-name")
-	sPrice := r.FormValue("service-price")
+	serviceName := r.FormValue("serviceName")
+	servicePrice := r.FormValue("servicePrice")
 
-	query := "INSERT INTO services (name, price) VALUES (?, ?)"
-	database_package.DB.QueryRow(query, sName, sPrice)
+	database_package.DB.QueryRow("INSERT INTO services (name, price) VALUES (?, ?)", serviceName, servicePrice)
 
 	database_package.DatabaseDisconnect()
 
