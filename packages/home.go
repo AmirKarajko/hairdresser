@@ -10,12 +10,6 @@ import (
 	"hairdresser/packages/services_package"
 )
 
-type ServicesData struct {
-	id int
-	name string
-	price float32
-}
-
 type HomePageData struct {
 	Title string
 	Content string
