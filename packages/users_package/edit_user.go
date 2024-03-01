@@ -17,6 +17,8 @@ type EditUserPageData struct {
 	Id int
 	Username string
 	Password string
+	PermissionDeleteBill bool
+	PermissionDeleteService bool
 
 	IsAdmin bool
 }
@@ -25,6 +27,8 @@ var (
 	id int
 	username string
 	password string
+	permissionDeleteBill bool
+	permissionDeleteService bool
 )
 
 func EditUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -49,13 +53,20 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	GetUserData(id)
+	LoadUserData(id)
 
 	if r.Method == http.MethodPost {
 		inputUsername := r.FormValue("username")
 		inputPassword := r.FormValue("password")
+		inputPermissionDeleteBill := r.Form.Get("permissionDeleteBill")
+		inputPermissionDeleteService := r.Form.Get("permissionDeleteService")
 
-		UpdateUser(id, inputUsername, inputPassword)
+		isPermissionDeleteBillChecked := inputPermissionDeleteBill == "on"
+		isPermissionDeleteServiceChecked := inputPermissionDeleteService == "on"
+		
+		UpdateUser(id, inputUsername, inputPassword, isPermissionDeleteBillChecked, isPermissionDeleteServiceChecked)
+
+		LoadUserData(id)
 	}	
 
 	data := EditUserPageData {
@@ -65,6 +76,8 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 		Id: id,
 		Username: username,
 		Password: password,
+		PermissionDeleteBill: permissionDeleteBill,
+		PermissionDeleteService: permissionDeleteService,
 
 		IsAdmin: isAdmin,
 	}
@@ -86,17 +99,17 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetUserData(id int) {
+func LoadUserData(id int) {
 	database_package.DatabaseConnect()
 
-	rows, err := database_package.DB.Query("SELECT username, password FROM users WHERE id = ?", id)
+	rows, err := database_package.DB.Query("SELECT username, password, permission_delete_bill, permission_delete_service FROM users WHERE id = ?", id)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&username, &password)
+		err := rows.Scan(&username, &password, &permissionDeleteBill, &permissionDeleteService)
 
 		if err != nil {
 			log.Fatal(err)
@@ -110,11 +123,11 @@ func GetUserData(id int) {
 	database_package.DatabaseDisconnect()
 }
 
-func UpdateUser(id int, username string, password string) {
+func UpdateUser(id int, username string, password string, permissionDeleteBill bool, permissionDeleteService bool) {
 	hashedPassword := utils_package.HashPassword(password)
 
 	database_package.DatabaseConnect()
-	_, err := database_package.DB.Exec("UPDATE users SET username = ?, password = ? WHERE id = ?", username, hashedPassword, id)
+	_, err := database_package.DB.Exec("UPDATE users SET username = ?, password = ?, permission_delete_bill = ?, permission_delete_service = ? WHERE id = ?", username, hashedPassword, permissionDeleteBill, permissionDeleteService, id)
 	if err != nil {
 		log.Fatal(err)
 	}

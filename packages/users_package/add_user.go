@@ -34,8 +34,13 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		inputUsername := r.FormValue("username")
 		inputPassword := r.FormValue("password")
+		inputPermissionDeleteBill := r.Form.Get("permissionDeleteBill")
+		inputPermissionDeleteService := r.Form.Get("permissionDeleteService")
 
-		AddUser(inputUsername, inputPassword)
+		isPermissionDeleteBillChecked := inputPermissionDeleteBill == "on"
+		isPermissionDeleteServiceChecked := inputPermissionDeleteService == "on"
+
+		AddUser(inputUsername, inputPassword, isPermissionDeleteBillChecked, isPermissionDeleteServiceChecked)
 	}
 
 	data := AddUserPageData {
@@ -62,11 +67,11 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AddUser(username string, password string) {
+func AddUser(username string, password string, permissionDeleteBill bool, permissionDeleteService bool) {
 	hashedPassword := utils_package.HashPassword(password)
 
 	database_package.DatabaseConnect()
-	_, err := database_package.DB.Exec("INSERT INTO users (username, password, permission_delete_bill, permission_delete_service) VALUES (?, ?, 0, 0)", username, hashedPassword)
+	_, err := database_package.DB.Exec("INSERT INTO users (username, password, permission_delete_bill, permission_delete_service) VALUES (?, ?, ?, ?)", username, hashedPassword, permissionDeleteBill, permissionDeleteService)
 	if err != nil {
 		log.Fatal(err)
 	}
