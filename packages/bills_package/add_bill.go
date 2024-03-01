@@ -16,9 +16,9 @@ func AddBillHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	username := session.Values["username"].(string)
-	sID := r.FormValue("service-list")
+	serviceId := r.FormValue("serviceList")
 
-	database_package.DB.QueryRow("INSERT INTO bills (user, service) VALUES ((SELECT ID FROM users WHERE username = ?), ?)", username, sID)
+	database_package.DB.QueryRow("INSERT INTO bills (user, service) VALUES ((SELECT ID FROM users WHERE username = ?), ?)", username, serviceId)
 
 	database_package.DatabaseDisconnect()
 
