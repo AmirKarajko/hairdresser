@@ -12,23 +12,26 @@ type CalculatorPageData struct {
 	Title string
 	Content string
 	Result float32
-	Username string
+
+	IsAdmin bool
 }
 
 func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
-	username := session.Values["username"].(string)
+	isAdmin := session.Values["is_admin"].(bool)
 
 	if !isAuthenticated {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 
 	data := CalculatorPageData {
 		Title: "Hairdresser | Calculator",
 		Content: "This is a hairdresser web application.",
 		Result: 0,
-		Username: username,
+
+		IsAdmin: isAdmin,
 	}
 
 	if r.Method == http.MethodGet {

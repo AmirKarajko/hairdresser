@@ -1,3 +1,3 @@
-INSERT INTO users (username, password, permission_delete_bill, permission_delete_service) VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 1, 1);
-INSERT INTO users (username, password, permission_delete_bill, permission_delete_service) VALUES ('amir', '1dd89e5367785ba89076cd264daac0464fdf0d7b', 1, 1);
-INSERT INTO users (username, password, permission_delete_bill, permission_delete_service) VALUES ('karajko', '699a1ee51647deebc8bd9a4fce3470ed03df614e', 0, 0);
+INSERT INTO users (username, password, permission_delete_bill, permission_delete_service, is_admin) VALUES ('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 1, 1, 1);
+INSERT INTO users (username, password, permission_delete_bill, permission_delete_service, is_admin) VALUES ('amir', '1dd89e5367785ba89076cd264daac0464fdf0d7b', 1, 1, 0);
+INSERT INTO users (username, password, permission_delete_bill, permission_delete_service, is_admin) VALUES ('karajko', '699a1ee51647deebc8bd9a4fce3470ed03df614e', 0, 0, 0);

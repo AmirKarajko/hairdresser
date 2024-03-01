@@ -11,12 +11,14 @@ func DeleteBillHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
 	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
+	isAdmin := session.Values["is_admin"].(bool)
 
 	if !isAuthenticated {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 
-	if permissionDeleteBill {
+	if permissionDeleteBill || isAdmin {
 		database_package.DatabaseConnect()
 
 		idStr := r.URL.Path[len("/delete_bill/"):]

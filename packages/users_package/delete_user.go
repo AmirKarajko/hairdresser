@@ -10,14 +10,16 @@ import (
 func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
-	username := session.Values["username"].(string)
+	isAdmin := session.Values["is_admin"].(bool)
 
 	if !isAuthenticated {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 
-	if username != "admin" {
+	if !isAdmin {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 
 	database_package.DatabaseConnect()
@@ -37,5 +39,5 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	database_package.DatabaseDisconnect()
 
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	http.Redirect(w, r, "/users", http.StatusSeeOther)
 }

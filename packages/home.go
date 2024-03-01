@@ -13,20 +13,22 @@ import (
 type HomePageData struct {
 	Title string
 	Content string
-	Username string
-	PermissionDeleteBill bool
 	Bills []bills_package.BillsData
 	Services []services_package.ServicesData
+
+	PermissionDeleteBill bool
+	IsAdmin bool
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
-	username := session.Values["username"].(string)
 	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
+	isAdmin := session.Values["is_admin"].(bool)
 
 	if !isAuthenticated {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 
 	bills_package.LoadBillsData()
@@ -35,10 +37,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	data := HomePageData {
 		Title: "Hairdresser",
 		Content: "This is a hairdresser web application.",
-		Username: username,
-		PermissionDeleteBill: permissionDeleteBill,
 		Bills: bills_package.Bills,
 		Services: services_package.Services,
+		
+		PermissionDeleteBill: permissionDeleteBill,
+		IsAdmin: isAdmin,
 	}
 
 	tmpl, err := template.ParseFiles("pages/home.html", "pages/navbar.html")

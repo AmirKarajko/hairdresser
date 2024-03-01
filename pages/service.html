@@ -55,7 +55,7 @@
                     </div>
                     <div class="panel-body">
                         <ul class="list-group">
-                            {{if or (eq .Username "admin") .PermissionDeleteService}}
+                            {{if or .IsAdmin .PermissionDeleteService}}
                                 {{range .Services}}
                                 <li class="list-group-item">
                                     <p>ID: {{.ID}} Name: {{.NAME}} Price: {{.PRICE}}</p> <button class="btn btn-primary" onclick="showDeleteAlert('{{.ID}}')">Delete</button>
@@ -72,10 +72,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-        {{if or (eq .Username "admin") .PermissionDeleteService}}
+        {{if or .IsAdmin .PermissionDeleteService}}
         <script>
 			function showDeleteAlert(id) {
 				var result = window.confirm("Are you sure you want to delete service " + id + "?");

@@ -19,21 +19,24 @@ var Users []UsersData
 type UsersPageData struct {
 	Title string
 	Content string
-	Username string
+
 	Users []UsersData
+	IsAdmin bool
 }
 
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
-	username := session.Values["username"].(string)
+	isAdmin := session.Values["is_admin"].(bool)
 
 	if !isAuthenticated {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 
-	if (username != "admin") {
+	if !isAdmin {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 
 	LoadUsersData()
@@ -41,8 +44,9 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	data := UsersPageData {
 		Title: "Hairdresser | Users",
 		Content: "This is a hairdresser web application.",
-		Username: username,
+		
 		Users: Users,
+		IsAdmin: isAdmin,
 	}
 
 	tmpl, err := template.ParseFiles("pages/users/users.html", "pages/navbar.html")
