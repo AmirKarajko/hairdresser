@@ -8,15 +8,6 @@
 
         <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico">
 
-        <style>
-            .list-group {
-                max-height: 300px;
-                margin-bottom: 10px;
-                overflow: scroll;
-                -webkit-overflow-scrolling: touch;
-            }
-        </style>
-
         <title>{{.Title}}</title>
     </head>
     <body>
@@ -27,26 +18,36 @@
             <p>{{.Content}}</p>
         </div>
 
-        <div class="row">
-            <div class="panel panel-primary" id="result_panel">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Users</h3>
-                </div>
-                <div>
-                    <button class="btn btn-primary" onclick="openAddUserPage()">Add new user</button>
-                </div>
-                <div class="panel-body">
-                    <ul class="list-group">
-                        {{range .Users}}
-                        <li class="list-group-item">
-                            <p>ID: {{.ID}} USERNAME: {{.USERNAME}}</p>
+        <div class="container">
+            <div class="panel-heading">
+                <h3 class="panel-title">Users</h3>
+            </div>
+            <div>
+                <button class="btn btn-primary" onclick="openAddUserPage()">Add new user</button>
+            </div>
+            <table class="table table-bordered table-responsive">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>USERNAME</td>
+                        <td>PASSWORD</td>
+                        <td>ACTIONS</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Users}}
+                    <tr>
+                        <th scope="row">{{.ID}}</th>
+                        <td>{{.USERNAME}}</td>
+                        <td>{{.PASSWORD}}</td>
+                        <td>
                             <button class="btn btn-primary" onclick="openEditUserPage('{{.ID}}')">Edit</button>
                             <button class="btn btn-primary" onclick="showDeleteAlert('{{.ID}}')">Delete</button>
-                        </li>
-                        {{end}}
-                    </ul>
-                </div>
-            </div>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
         </div>
 
         <script>
