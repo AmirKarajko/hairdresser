@@ -18,8 +18,13 @@ type LoginPageData struct {
 
 var (
 	errorMessage string
+
+	id int
+	username string
+	password string
 	permissionDeleteBill bool
 	permissionDeleteService bool
+	isAdmin bool
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +39,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			session.Values["authenticated"] = true
 			session.Values["permission_delete_bill"] = permissionDeleteBill
 			session.Values["permission_delete_service"] = permissionDeleteService
+			session.Values["is_admin"] = isAdmin
 			session.Save(r, w)
 		}
 	}
@@ -41,6 +47,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	isAuthenticated := session.Values["authenticated"].(bool)
 	if isAuthenticated {
 		http.Redirect(w, r, "/home", http.StatusSeeOther)
+		return
 	}
 
 	data := LoginPageData {
@@ -66,16 +73,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func LoginUser(username string, password string) bool {
+func LoginUser(user string, pass string) bool {
 	database_package.DatabaseConnect()
-	row := database_package.DB.QueryRow("SELECT id, password, permission_delete_bill, permission_delete_service FROM users WHERE username = ?", username)
+	row := database_package.DB.QueryRow("SELECT id, password, permission_delete_bill, permission_delete_service, is_admin FROM users WHERE username = ?", user)
 
-	var (
-		id int
-		pass string
-	)
-
-	err := row.Scan(&id, &pass, &permissionDeleteBill, &permissionDeleteService)
+	err := row.Scan(&id, &password, &permissionDeleteBill, &permissionDeleteService, &isAdmin)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			errorMessage = "Error: User does not exist."
@@ -85,9 +87,9 @@ func LoginUser(username string, password string) bool {
 		return false
 	}
 
-	hashedPassword := utils_package.HashPassword(password)
+	hashedPassword := utils_package.HashPassword(pass)
 
-	if hashedPassword == pass {
+	if hashedPassword == password {
 		errorMessage = ""
 		return true
 	} else {

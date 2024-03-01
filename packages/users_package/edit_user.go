@@ -13,26 +13,33 @@ import (
 type EditUserPageData struct {
 	Title string
 	Content string
-	Username string
+	
 	Id int
-	User string
+	Username string
 	Password string
+
+	IsAdmin bool
 }
 
-var user string
-var password string
+var (
+	id int
+	username string
+	password string
+)
 
 func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
-	username := session.Values["username"].(string)
+	isAdmin := session.Values["is_admin"].(bool)
 
 	if !isAuthenticated {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 
-	if username != "admin" {
+	if !isAdmin {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
 	}
 
 	idStr := r.URL.Path[len("/edit_user/"):]
@@ -54,10 +61,12 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 	data := EditUserPageData {
 		Title: "Hairdresser | Edit User",
 		Content: "This is a hairdresser web application.",
-		Username: username,
+		
 		Id: id,
-		User: user,
+		Username: username,
 		Password: password,
+
+		IsAdmin: isAdmin,
 	}
 
 	tmpl, err := template.ParseFiles("pages/users/edit_user.html", "pages/navbar.html")
@@ -87,7 +96,7 @@ func GetUserData(id int) {
 	defer rows.Close()
 
 	for rows.Next() {
-		err := rows.Scan(&user, &password)
+		err := rows.Scan(&username, &password)
 
 		if err != nil {
 			log.Fatal(err)
