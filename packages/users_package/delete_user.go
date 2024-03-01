@@ -31,7 +31,7 @@ func DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = database_package.DB.Exec("DELETE FROM users WHERE id = ?", id)
+	_, err = database_package.DB.Exec("DELETE FROM users WHERE id = ? AND is_admin = 0", id)
 	if err != nil {
 		http.Error(w, "Failed to delete user", http.StatusInternalServerError)
 		return

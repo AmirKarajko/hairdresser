@@ -12,6 +12,7 @@ type UsersData struct {
 	ID int
 	USERNAME string
 	PASSWORD string
+	ISADMIN bool
 }
 
 var Users []UsersData
@@ -71,7 +72,7 @@ func LoadUsersData() {
 
 	database_package.DatabaseConnect()
 
-	rows, err := database_package.DB.Query("SELECT id, username, password FROM users")
+	rows, err := database_package.DB.Query("SELECT id, username, password, is_admin FROM users")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,14 +83,15 @@ func LoadUsersData() {
 			userID int
 			userUsername string
 			userPassword string
+			userIsAdmin bool
 		)
 
-		err := rows.Scan(&userID, &userUsername, &userPassword)
+		err := rows.Scan(&userID, &userUsername, &userPassword, &userIsAdmin)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		Users = append(Users, UsersData{userID, userUsername, userPassword})
+		Users = append(Users, UsersData{userID, userUsername, userPassword, userIsAdmin})
 	}
 
 	if err := rows.Err(); err != nil {
