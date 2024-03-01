@@ -39,7 +39,9 @@
                         <td>{{.PASSWORD}}</td>
                         <td>
                             <button class="btn btn-primary" onclick="openEditUserPage('{{.ID}}')">Edit</button>
+                            {{if not .ISADMIN}}
                             <button class="btn btn-primary" onclick="showDeleteAlert('{{.ID}}')">Delete</button>
+                            {{end}}
                         </td>
                     </tr>
                     {{end}}
