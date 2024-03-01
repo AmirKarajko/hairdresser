@@ -35,12 +35,27 @@
                         <label for="password">Password</label>
                         <input type="text" id="password" name="password" class="form-control" value="{{.Password}}" required>
                     </div>
+                    <div class="form-check mb-2">
+                        {{if .PermissionDeleteBill}}
+                        <input class="form-check-input" type="checkbox" id="permissionDeleteBill" name="permissionDeleteBill" checked>
+                        {{else}}
+                        <input class="form-check-input" type="checkbox" id="permissionDeleteBill" name="permissionDeleteBill">
+                        {{end}}
+                        <label class="form-check-label" for="permissionDeleteBill">Permission delete bill</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{if .PermissionDeleteService}}
+                        <input class="form-check-input" type="checkbox" id="permissionDeleteService" name="permissionDeleteService" checked>
+                        {{else}}
+                        <input class="form-check-input" type="checkbox" id="permissionDeleteService" name="permissionDeleteService">
+                        {{end}}
+                        <label class="form-check-label" for="permissionDeleteService">Permission delete service</label>
+                    </div>
                     <div class="form-group mb-2">
                         <button type="submit" class="form-control btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>
-
         </div>
 
         <script src="/static/bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>
