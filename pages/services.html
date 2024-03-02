@@ -48,6 +48,7 @@
                 </form>
             </div>
 
+            {{if gt (len .Services) 0}}
             <div class="row">
                 <div class="panel panel-primary" id="result_panel">
                     <div class="panel-heading">
@@ -72,6 +73,7 @@
                     </div>
                 </div>
             </div>
+            {{end}}
         </div>
 
         {{if or .IsAdmin .PermissionDeleteService}}
