@@ -10,7 +10,7 @@ import (
 	"hairdresser/packages/services_package"
 )
 
-type HomePageData struct {
+type DashboardPageData struct {
 	Title string
 	Content string
 	Bills []bills_package.BillsData
@@ -20,7 +20,7 @@ type HomePageData struct {
 	IsAdmin bool
 }
 
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
+func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
 	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
@@ -34,7 +34,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	bills_package.LoadBillsData()
 	services_package.LoadServicesData()
 
-	data := HomePageData {
+	data := DashboardPageData {
 		Title: "Hairdresser",
 		Content: "This is a hairdresser web application.",
 		Bills: bills_package.Bills,
@@ -44,7 +44,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		IsAdmin: isAdmin,
 	}
 
-	tmpl, err := template.ParseFiles("pages/home.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/dashboard.html", "pages/navbar.html")
 	if err != nil {
 		log.Fatal(err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
