@@ -29,7 +29,7 @@ func main() {
 	http.HandleFunc("/add_bill", bills_package.AddBillHandler)
 	http.HandleFunc("/delete_bill/", bills_package.DeleteBillHandler)
 
-	http.HandleFunc("/service", packages.ServiceHandler)
+	http.HandleFunc("/services", packages.ServicesHandler)
 	http.HandleFunc("/add_service", services_package.AddServiceHandler)
 	http.HandleFunc("/delete_service/", services_package.DeleteServiceHandler)
 
