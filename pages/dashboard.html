@@ -35,7 +35,7 @@
     
                 <form action="/add_bill" method="post">
                     <div class="form-group mb-2">
-                        <label for="serviceList">Service</label>
+                        <label for="serviceList">Select Service</label>
                         <select id="serviceList" name="serviceList" class="form-control">
                             {{range .Services}}
                                 <option value="{{.ID}}">{{.NAME}}</option>

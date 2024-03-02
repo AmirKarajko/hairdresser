@@ -9,7 +9,7 @@ import (
 	"hairdresser/packages/services_package"
 )
 
-type ServicePageData struct {
+type ServicesPageData struct {
 	Title string
 	Content string
 	Services []services_package.ServicesData
@@ -18,7 +18,7 @@ type ServicePageData struct {
 	IsAdmin bool
 }
 
-func ServiceHandler(w http.ResponseWriter, r *http.Request) {
+func ServicesHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 	isAuthenticated := session.Values["authenticated"].(bool)
 	permissionDeleteService := session.Values["permission_delete_service"].(bool)
@@ -31,8 +31,8 @@ func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 
 	services_package.LoadServicesData()
 
-	data := ServicePageData {
-		Title: "Hairdresser | Service",
+	data := ServicesPageData {
+		Title: "Hairdresser | Services",
 		Content: "This is a hairdresser web application.",
 		Services: services_package.Services,
 		
@@ -40,7 +40,7 @@ func ServiceHandler(w http.ResponseWriter, r *http.Request) {
 		IsAdmin: isAdmin,
 	}
 
-	tmpl, err := template.ParseFiles("pages/service.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/services.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)

@@ -21,5 +21,5 @@ func AddServiceHandler(w http.ResponseWriter, r *http.Request) {
 
 	database_package.DatabaseDisconnect()
 
-	http.Redirect(w, r, "/service", http.StatusSeeOther)
+	http.Redirect(w, r, "/services", http.StatusSeeOther)
 }
