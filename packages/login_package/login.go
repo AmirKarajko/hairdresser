@@ -46,7 +46,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	isAuthenticated := session.Values["authenticated"].(bool)
 	if isAuthenticated {
-		http.Redirect(w, r, "/home", http.StatusSeeOther)
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 		return
 	}
 

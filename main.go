@@ -15,7 +15,7 @@ func main() {
 
 	http.HandleFunc("/", RedirectHandler)
 
-    http.HandleFunc("/home", packages.HomeHandler)
+    http.HandleFunc("/dashboard", packages.DashboardHandler)
 
 	http.HandleFunc("/users", users_package.UsersHandler)
 	
