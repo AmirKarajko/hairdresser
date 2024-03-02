@@ -35,10 +35,10 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodGet {
-		billDateFrom := r.FormValue("bill-date-from")
-		billDateTo := r.FormValue("bill-date-to")
+		billDateFrom := r.FormValue("billDateFrom")
+		billDateTo := r.FormValue("billDateTo")
 
-		data.Result = getCalculatorResult(billDateFrom, billDateTo)
+		data.Result = CalculateResult(billDateFrom, billDateTo)
 	}
 
 	tmpl, err := template.ParseFiles("pages/calculator.html", "pages/navbar.html")
@@ -58,14 +58,12 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getCalculatorResult(billDateFrom string, billDateTo string) float32 {
+func CalculateResult(billDateFrom string, billDateTo string) float32 {
 	var result float32
 
 	database_package.DatabaseConnect()
 
-	query := "SELECT SUM(services.price) AS result FROM services INNER JOIN bills ON bills.service = services.ID WHERE bills.date BETWEEN ? AND ?"
-	
-	database_package.DB.QueryRow(query, billDateFrom, billDateTo).Scan(&result)
+	database_package.DB.QueryRow("SELECT SUM(services.price) AS result FROM services INNER JOIN bills ON bills.service = services.ID WHERE bills.date BETWEEN ? AND ?", billDateFrom, billDateTo).Scan(&result)
 
 	database_package.DatabaseDisconnect()
 
