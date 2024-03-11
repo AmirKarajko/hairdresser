@@ -22,14 +22,19 @@ type DashboardPageData struct {
 
 func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
-	isAuthenticated := session.Values["authenticated"].(bool)
-	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
-	isAdmin := session.Values["is_admin"].(bool)
 
+	if session.Values["authenticated"] == nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	isAuthenticated := session.Values["authenticated"].(bool)
 	if !isAuthenticated {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
+
+	permissionDeleteBill := session.Values["permission_delete_bill"].(bool)
+	isAdmin := session.Values["is_admin"].(bool)
 
 	bills_package.LoadBillsData()
 	services_package.LoadServicesData()
