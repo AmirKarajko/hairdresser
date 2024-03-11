@@ -9,14 +9,19 @@ import (
 
 func DeleteServiceHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
-	isAuthenticated := session.Values["authenticated"].(bool)
-	permissionDeleteService := session.Values["permission_delete_service"].(bool)
-	isAdmin := session.Values["is_admin"].(bool)
 
-	if !isAuthenticated {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	if session.Values["authenticated"] == nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
+	isAuthenticated := session.Values["authenticated"].(bool)
+	if !isAuthenticated {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	permissionDeleteService := session.Values["permission_delete_service"].(bool)
+	isAdmin := session.Values["is_admin"].(bool)
 
 	if permissionDeleteService || isAdmin {
 		database_package.DatabaseConnect()
