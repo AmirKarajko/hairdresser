@@ -18,10 +18,11 @@ func main() {
     http.HandleFunc("/dashboard", packages.DashboardHandler)
 
 	http.HandleFunc("/users", users_package.UsersHandler)
-	
 	http.HandleFunc("/add_user", users_package.AddUserHandler)
 	http.HandleFunc("/edit_user/", users_package.EditUserHandler)
 	http.HandleFunc("/delete_user/", users_package.DeleteUserHandler)
+
+	http.HandleFunc("/statistics", packages.StatisticsHandler)
 
 	http.HandleFunc("/login", login_package.LoginHandler)
 	http.HandleFunc("/logout", login_package.LogoutHandler)
