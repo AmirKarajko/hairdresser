@@ -26,7 +26,7 @@
             <script>
             const ctx = document.getElementById('chart');
 
-            let idArr = [], rArr = [];
+            let userArr = [], resultArr = [];
 
             fetch('/get_users_result_data').then(response => {
                 if (!response.ok) {
@@ -35,17 +35,17 @@
                 return response.json();
             }).then(data => {
                 data.forEach(item => {
-                    idArr.push(item.ID);
-                    rArr.push(item.RESULT);
+                    userArr.push(item.USER);
+                    resultArr.push(item.RESULT);
                 });
 
                 new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: idArr,
+                        labels: userArr,
                         datasets: [{
                         label: 'User Earnings',
-                        data: rArr,
+                        data: resultArr,
                         borderWidth: 1
                         }]
                     },

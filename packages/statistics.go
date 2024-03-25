@@ -10,7 +10,7 @@ import (
 )
 
 type UsersData struct {
-	ID string
+	USER string
 	RESULT float32
 }
 
@@ -80,16 +80,16 @@ func LoadUsersResult() {
 
 	for rows.Next() {
 		var (
-			userID string
-			userResult float32
+			user string
+			result float32
 		)
 
-		err := rows.Scan(&userID, &userResult)
+		err := rows.Scan(&user, &result)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		Users = append(Users, UsersData{userID, userResult})
+		Users = append(Users, UsersData{user, result})
 	}
 
 	if err := rows.Err(); err != nil {
