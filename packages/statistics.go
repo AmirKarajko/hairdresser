@@ -4,12 +4,13 @@ import (
     "log"
 	"html/template"
     "net/http"
+	"encoding/json"
 
 	"hairdresser/packages/database_package"
 )
 
 type UsersData struct {
-	ID int
+	ID string
 	RESULT float32
 }
 
@@ -43,8 +44,6 @@ func StatisticsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	LoadUsersResult()
-
 	data := StatisticsPageData {
 		Title: "Hairdresser | Statistics",
 		Content: "This is a hairdresser web application.",
@@ -73,7 +72,7 @@ func LoadUsersResult() {
 
 	database_package.DatabaseConnect()
 
-	rows, err := database_package.DB.Query("SELECT bills.user, SUM(services.price) AS result FROM services INNER JOIN bills ON bills.service = services.ID GROUP BY bills.user")
+	rows, err := database_package.DB.Query("SELECT u.username, SUM(s.price) AS result FROM users u INNER JOIN bills b ON u.id = b.user INNER JOIN services s ON b.service = s.ID GROUP BY b.user")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -81,7 +80,7 @@ func LoadUsersResult() {
 
 	for rows.Next() {
 		var (
-			userID int
+			userID string
 			userResult float32
 		)
 
@@ -98,4 +97,41 @@ func LoadUsersResult() {
 	}
 
 	database_package.DatabaseDisconnect()
+}
+
+func GetUsersResultData(w http.ResponseWriter, r *http.Request) {
+	session, _ := database_package.CookieStore().Get(r, "session-name")
+
+	if session.Values["authenticated"] == nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	isAuthenticated := session.Values["authenticated"].(bool)
+	if !isAuthenticated {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	isAdmin := session.Values["is_admin"].(bool)
+
+	if !isAdmin {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	LoadUsersResult()
+
+	jsonData, err := json.Marshal(Users)
+	if err != nil {
+		http.Error(w, "Failed to marshal JSON", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	_, err = w.Write(jsonData)
+	if err != nil {
+		http.Error(w, "Failed to write JSON response", http.StatusInternalServerError)
+		return
+	}
 }
