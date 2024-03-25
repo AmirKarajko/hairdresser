@@ -20,13 +20,13 @@
 
         <div class="container">
             <div align="center" style="height:40vh; width:80vw;">
-                <canvas id="myChart"></canvas>
+                <canvas id="chart"></canvas>
             </div>
             
             <script src="/static/chartjs-4.4.2/Chart.min.js"></script>
             
             <script>
-            const ctx = document.getElementById('myChart');
+            const ctx = document.getElementById('chart');
 
             let idArr = [], rArr = [];
 
@@ -46,7 +46,7 @@
                     data: {
                         labels: idArr,
                         datasets: [{
-                        label: 'Users Earnings',
+                        label: 'User Earnings',
                         data: rArr,
                         borderWidth: 1
                         }]
