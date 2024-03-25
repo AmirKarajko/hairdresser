@@ -13,13 +13,11 @@
     <body>
         {{template "navbar.html" .}}
 
-        <div class="text-center">
+        <div align="center" class="container">
             <h1>{{.Title}}</h1>
             <p>{{.Content}}</p>
-        </div>
 
-        <div class="container">
-            <div align="center" style="height:40vh; width:80vw;">
+            <div style="width:50%; height: 50%;">
                 <canvas id="chart"></canvas>
             </div>
             
