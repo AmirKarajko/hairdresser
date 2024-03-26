@@ -87,7 +87,7 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 		IsAdmin: isAdmin,
 	}
 
-	tmpl, err := template.ParseFiles("pages/users/edit_user.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/admin/users/edit_user.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)

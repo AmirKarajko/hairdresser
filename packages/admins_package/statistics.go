@@ -42,7 +42,7 @@ func StatisticsHandler(w http.ResponseWriter, r *http.Request) {
 		IsAdmin: isAdmin,
 	}
 
-	tmpl, err := template.ParseFiles("pages/statistics.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/admin/statistics.html", "pages/navbar.html")
 	if err != nil {
 		log.Fatal(err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
