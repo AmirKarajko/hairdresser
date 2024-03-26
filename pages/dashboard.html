@@ -17,17 +17,17 @@
             }
         </style>
 
-        <title>{{.Title}}</title>
+        <title>{{.PageTitle}}</title>
     </head>
     <body>
         {{template "navbar.html" .}}
 
-        <div class="text-center">
-            <h1>{{.Title}}</h1>
-            <p>{{.Content}}</p>
-        </div>
+        <div class="container">
+            <div class="row text-center">
+                <h1>{{.Title}}</h1>
+                <p>{{.Content}}</p>
+            </div>
 
-        <div class="container" style="width: 50%;">
             <div class="row">    
                 <form action="/add_bill" method="post">
                     <div class="form-group mb-2">

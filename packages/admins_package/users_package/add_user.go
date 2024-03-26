@@ -10,6 +10,7 @@ import (
 )
 
 type AddUserPageData struct {
+	PageTitle string
 	Title string
 	Content string
 
@@ -49,7 +50,8 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := AddUserPageData {
-		Title: "Hairdresser | Add User",
+		PageTitle: "Hairdresser | Add User",
+		Title: "Add User",
 		Content: "This is a hairdresser web application.",
 
 		IsAdmin: isAdmin,

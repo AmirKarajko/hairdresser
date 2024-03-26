@@ -11,6 +11,7 @@ import (
 )
 
 type EditUserPageData struct {
+	PageTitle string
 	Title string
 	Content string
 	
@@ -75,7 +76,8 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 	}	
 
 	data := EditUserPageData {
-		Title: "Hairdresser | Edit User",
+		PageTitle: "Hairdresser | Edit User",
+		Title: "Edit User",
 		Content: "This is a hairdresser web application.",
 		
 		Id: id,

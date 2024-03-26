@@ -9,6 +9,7 @@ import (
 )
 
 type CalculatorPageData struct {
+	PageTitle string
 	Title string
 	Content string
 	Result float32
@@ -32,7 +33,8 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 	isAdmin := session.Values["is_admin"].(bool)
 
 	data := CalculatorPageData {
-		Title: "Hairdresser | Calculator",
+		PageTitle: "Hairdresser | Calculator",
+		Title: "Calculator",
 		Content: "This is a hairdresser web application.",
 		Result: 0,
 

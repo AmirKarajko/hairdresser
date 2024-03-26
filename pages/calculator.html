@@ -8,28 +8,30 @@
 
         <link rel="icon" type="image/x-icon" href="/static/resources/favicon.ico">
 
-        <title>{{.Title}}</title>
+        <title>{{.PageTitle}}</title>
     </head>
     <body>
         {{template "navbar.html" .}}
 
-        <div class="text-center">
-            <h1>{{.Title}}</h1>
-            <p>{{.Content}}</p>
-        </div>
+        <div class="container">
+            <div class="row text-center">
+                <h1>{{.Title}}</h1>
+                <p>{{.Content}}</p>
+            </div>
 
-        <div class="container" style="width: 50%;">
-            <form action="" method="get">
-                <div class="form-group mb-2">
-                    <label for="billDateFrom">Date From</label>
-                    <input type="date" id="billDateFrom" name="billDateFrom" class="form-control" required>
-                </div>
-                <div class="form-group mb-2">
-                    <label for="billDateTo">Date To</label>
-                    <input type="date" id="billDateTo" name="billDateTo" class="form-control" required>
-                </div>
-                <button type="submit" class="form-control btn btn-primary">Calculate</button>
-            </form>
+            <div class="row">
+                <form action="" method="get">
+                    <div class="form-group mb-2">
+                        <label for="billDateFrom">Date From</label>
+                        <input type="date" id="billDateFrom" name="billDateFrom" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="billDateTo">Date To</label>
+                        <input type="date" id="billDateTo" name="billDateTo" class="form-control" required>
+                    </div>
+                    <button type="submit" class="form-control btn btn-primary">Calculate</button>
+                </form>
+            </div>
         </div>
 
         <h1 class="text-center">Result: {{.Result}}</h1>

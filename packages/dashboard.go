@@ -11,6 +11,7 @@ import (
 )
 
 type DashboardPageData struct {
+	PageTitle string
 	Title string
 	Content string
 	Bills []bills_package.BillsData
@@ -40,6 +41,7 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	services_package.LoadServicesData()
 
 	data := DashboardPageData {
+		PageTitle: "Hairdresser | Dashboard",
 		Title: "Hairdresser",
 		Content: "This is a hairdresser web application.",
 		Bills: bills_package.Bills,

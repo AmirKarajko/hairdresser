@@ -8,64 +8,64 @@
 
         <link rel="icon" type="image/x-icon" href="/static/resources/favicon.ico">
 
-        <title>{{.Title}}</title>
+        <title>{{.PageTitle}}</title>
     </head>
     <body>
         {{template "navbar.html" .}}
 
-        <div align="center" class="container">
-            <h1>{{.Title}}</h1>
-            <p>{{.Content}}</p>
-
-            <div style="width:50%; height: 50%;">
-                <canvas id="chart"></canvas>
+        <div class="container text-center">
+            <div class="row">
+                <h1>{{.Title}}</h1>
+                <p>{{.Content}}</p>
             </div>
             
-            <script src="/static/chartjs-4.4.2/Chart.min.js"></script>
-            
-            <script>
-            const ctx = document.getElementById('chart');
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <canvas id="chart"></canvas>
+                </div>
 
-            let userArr = [], earningsArr = [];
-
-            fetch('/user_earnings').then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            }).then(data => {
-                data.forEach(item => {
-                    userArr.push(item.USER);
-                    earningsArr.push(item.EARNINGS);
-                });
-
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: userArr,
-                        datasets: [{
-                        label: 'User Earnings',
-                        data: earningsArr,
-                        borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: false,
-                            text: 'Chart.js Doughnut Chart'
-                        }
-                        }
+                <script src="/static/chartjs-4.4.2/Chart.min.js"></script>
+                <script>
+                const ctx = document.getElementById('chart');
+                let userArr = [], earningsArr = [];
+                fetch('/user_earnings').then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
+                    return response.json();
+                }).then(data => {
+                    data.forEach(item => {
+                        userArr.push(item.USER);
+                        earningsArr.push(item.EARNINGS);
+                    });
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: userArr,
+                            datasets: [{
+                            label: 'User Earnings',
+                            data: earningsArr,
+                            borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: false,
+                                text: 'Chart.js Doughnut Chart'
+                            }
+                            }
+                        }
+                    });
+                }).catch(error => {
+                    console.error('There was a problem with the fetch operation: ', error);
                 });
-            }).catch(error => {
-                console.error('There was a problem with the fetch operation: ', error);
-            });
-            </script>
+                </script>
+            </div>
         </div>
 
         <script src="/static/bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js"></script>

@@ -8,45 +8,46 @@
 
         <link rel="icon" type="image/x-icon" href="/static/resources/favicon.ico">
 
-        <title>{{.Title}}</title>
+        <title>{{.PageTitle}}</title>
     </head>
     <body>
         {{template "navbar.html" .}}
 
-        <div class="text-center">
-            <h1>{{.Title}}</h1>
-            <p>{{.Content}}</p>
-        </div>
-
         <div class="container">
-            <div>
-                <button class="btn btn-primary" onclick="openAddUserPage()">Add new user</button>
+            <div class="row text-center">
+                <h1>{{.Title}}</h1>
+                <p>{{.Content}}</p>
             </div>
-            <table class="table table-bordered table-responsive">
-                <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>USERNAME</td>
-                        <td>PASSWORD</td>
-                        <td>ACTIONS</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{range .Users}}
-                    <tr>
-                        <th scope="row">{{.ID}}</th>
-                        <td>{{.USERNAME}}</td>
-                        <td>{{.PASSWORD}}</td>
-                        <td>
-                            <button class="btn btn-primary" onclick="openEditUserPage('{{.ID}}')">Edit</button>
-                            {{if not .ISADMIN}}
-                            <button class="btn btn-primary" onclick="showDeleteAlert('{{.ID}}')">Delete</button>
-                            {{end}}
-                        </td>
-                    </tr>
-                    {{end}}
-                </tbody>
-            </table>
+
+            <button class="btn btn-primary" onclick="openAddUserPage()">Add new user</button>
+
+            <div class="row table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>ID</td>
+                            <td>USERNAME</td>
+                            <td>PASSWORD</td>
+                            <td>ACTIONS</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .Users}}
+                        <tr>
+                            <th scope="row">{{.ID}}</th>
+                            <td>{{.USERNAME}}</td>
+                            <td>{{.PASSWORD}}</td>
+                            <td>
+                                <button class="btn btn-primary" onclick="openEditUserPage('{{.ID}}')">Edit</button>
+                                {{if not .ISADMIN}}
+                                <button class="btn btn-primary" onclick="showDeleteAlert('{{.ID}}')">Delete</button>
+                                {{end}}
+                            </td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <script>
