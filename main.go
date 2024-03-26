@@ -5,7 +5,8 @@ import (
 
 	"hairdresser/packages"
 	"hairdresser/packages/login_package"
-	"hairdresser/packages/users_package"
+	"hairdresser/packages/admins_package"
+	"hairdresser/packages/admins_package/users_package"
 	"hairdresser/packages/bills_package"
 	"hairdresser/packages/services_package"
 )
@@ -22,8 +23,8 @@ func main() {
 	http.HandleFunc("/edit_user/", users_package.EditUserHandler)
 	http.HandleFunc("/delete_user/", users_package.DeleteUserHandler)
 
-	http.HandleFunc("/statistics", packages.StatisticsHandler)
-	http.HandleFunc("/get_users_result_data", packages.GetUsersResultData)
+	http.HandleFunc("/statistics", admins_package.StatisticsHandler)
+	http.HandleFunc("/get_users_result_data", admins_package.GetUsersResultData)
 
 	http.HandleFunc("/login", login_package.LoginHandler)
 	http.HandleFunc("/logout", login_package.LogoutHandler)
