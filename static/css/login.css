@@ -1,6 +1,7 @@
 body, html {
     height: 100%;
     margin: 0;
+    background-color: #00aeff;
 }
 
 .container {
@@ -18,7 +19,7 @@ body, html {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #eeeeee;
 }
 
 .footer {
