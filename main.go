@@ -24,7 +24,7 @@ func main() {
 	http.HandleFunc("/delete_user/", users_package.DeleteUserHandler)
 
 	http.HandleFunc("/statistics", admins_package.StatisticsHandler)
-	http.HandleFunc("/get_users_result_data", admins_package.GetUsersResultData)
+	http.HandleFunc("/user_earnings", admins_package.UserEarningsHandler)
 
 	http.HandleFunc("/login", login_package.LoginHandler)
 	http.HandleFunc("/logout", login_package.LogoutHandler)
