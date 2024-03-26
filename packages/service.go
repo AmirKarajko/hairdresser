@@ -10,6 +10,7 @@ import (
 )
 
 type ServicesPageData struct {
+	PageTitle string
 	Title string
 	Content string
 	Services []services_package.ServicesData
@@ -37,7 +38,8 @@ func ServicesHandler(w http.ResponseWriter, r *http.Request) {
 	services_package.LoadServicesData()
 
 	data := ServicesPageData {
-		Title: "Hairdresser | Services",
+		PageTitle: "Hairdresser | Services",
+		Title: "Services",
 		Content: "This is a hairdresser web application.",
 		Services: services_package.Services,
 		

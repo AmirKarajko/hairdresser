@@ -9,6 +9,7 @@ import (
 )
 
 type StatisticsPageData struct {
+	PageTitle string
 	Title string
 	Content string
 
@@ -36,7 +37,8 @@ func StatisticsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := StatisticsPageData {
-		Title: "Hairdresser | Statistics",
+		PageTitle: "Hairdresser | Statistics",
+		Title: "Statistics",
 		Content: "This is a hairdresser web application.",
 		
 		IsAdmin: isAdmin,

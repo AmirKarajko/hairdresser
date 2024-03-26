@@ -18,6 +18,7 @@ type UsersData struct {
 var Users []UsersData
 
 type UsersPageData struct {
+	PageTitle string
 	Title string
 	Content string
 
@@ -48,7 +49,8 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	LoadUsersData()
 
 	data := UsersPageData {
-		Title: "Hairdresser | Users",
+		PageTitle: "Hairdresser | Users",
+		Title: "Users",
 		Content: "This is a hairdresser web application.",
 		
 		Users: Users,

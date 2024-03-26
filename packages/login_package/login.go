@@ -11,6 +11,7 @@ import (
 )
 
 type LoginPageData struct {
+	PageTitle string
 	Title string
 	Content string
 	ErrorMessage string
@@ -52,9 +53,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-
 	data := LoginPageData {
-		Title: "Hairdresser | Login",
+		PageTitle: "Hairdresser | Login",
+		Title: "Login",
 		Content: "This is a hairdresser web application.",
 		ErrorMessage: errorMessage,
 	}
