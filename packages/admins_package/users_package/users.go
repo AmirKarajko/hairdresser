@@ -55,7 +55,7 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 		IsAdmin: isAdmin,
 	}
 
-	tmpl, err := template.ParseFiles("pages/users/users.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/admin/users/users.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)

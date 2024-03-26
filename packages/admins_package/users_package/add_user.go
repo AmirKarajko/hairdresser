@@ -55,7 +55,7 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 		IsAdmin: isAdmin,
 	}
 
-	tmpl, err := template.ParseFiles("pages/users/add_user.html", "pages/navbar.html")
+	tmpl, err := template.ParseFiles("pages/admin/users/add_user.html", "pages/navbar.html")
 
 	if err != nil {
 		log.Fatal(err)
