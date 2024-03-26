@@ -26,9 +26,9 @@
             <script>
             const ctx = document.getElementById('chart');
 
-            let userArr = [], resultArr = [];
+            let userArr = [], earningsArr = [];
 
-            fetch('/get_users_result_data').then(response => {
+            fetch('/user_earnings').then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -36,7 +36,7 @@
             }).then(data => {
                 data.forEach(item => {
                     userArr.push(item.USER);
-                    resultArr.push(item.RESULT);
+                    earningsArr.push(item.EARNINGS);
                 });
 
                 new Chart(ctx, {
@@ -45,7 +45,7 @@
                         labels: userArr,
                         datasets: [{
                         label: 'User Earnings',
-                        data: resultArr,
+                        data: earningsArr,
                         borderWidth: 1
                         }]
                     },

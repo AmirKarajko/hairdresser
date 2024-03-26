@@ -10,17 +10,17 @@ import (
 
 type UsersData struct {
 	USER string
-	RESULT float32
+	EARNINGS float32
 }
 
 var Users []UsersData
 
-func LoadUsersResult() {
+func LoadUserEarningsData() {
 	Users = nil
 
 	database_package.DatabaseConnect()
 
-	rows, err := database_package.DB.Query("SELECT u.username, SUM(s.price) AS result FROM users u INNER JOIN bills b ON u.id = b.user INNER JOIN services s ON b.service = s.ID GROUP BY b.user")
+	rows, err := database_package.DB.Query("SELECT users.username, SUM(services.price) AS earnings FROM users INNER JOIN bills ON users.id = bills.user INNER JOIN services ON bills.service = services.ID GROUP BY bills.user")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,15 +29,15 @@ func LoadUsersResult() {
 	for rows.Next() {
 		var (
 			user string
-			result float32
+			earnings float32
 		)
 
-		err := rows.Scan(&user, &result)
+		err := rows.Scan(&user, &earnings)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		Users = append(Users, UsersData{user, result})
+		Users = append(Users, UsersData{user, earnings})
 	}
 
 	if err := rows.Err(); err != nil {
@@ -47,7 +47,7 @@ func LoadUsersResult() {
 	database_package.DatabaseDisconnect()
 }
 
-func GetUsersResultData(w http.ResponseWriter, r *http.Request) {
+func UserEarningsHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := database_package.CookieStore().Get(r, "session-name")
 
 	if session.Values["authenticated"] == nil {
@@ -67,7 +67,7 @@ func GetUsersResultData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	LoadUsersResult()
+	LoadUserEarningsData()
 
 	jsonData, err := json.Marshal(Users)
 	if err != nil {
