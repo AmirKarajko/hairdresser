@@ -39,7 +39,7 @@ func StatisticsHandler(w http.ResponseWriter, r *http.Request) {
 	data := StatisticsPageData {
 		PageTitle: "Hairdresser | Statistics",
 		Title: "Statistics",
-		Content: "This is a hairdresser web application.",
+		Content: "This statistic displays the earnings of each user.",
 		
 		IsAdmin: isAdmin,
 	}

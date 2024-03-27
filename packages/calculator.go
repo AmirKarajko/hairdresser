@@ -35,7 +35,7 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request) {
 	data := CalculatorPageData {
 		PageTitle: "Hairdresser | Calculator",
 		Title: "Calculator",
-		Content: "This is a hairdresser web application.",
+		Content: "This page provides a tool to calculate your earnings.",
 		Result: 0,
 
 		IsAdmin: isAdmin,
