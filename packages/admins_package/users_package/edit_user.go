@@ -78,7 +78,7 @@ func EditUserHandler(w http.ResponseWriter, r *http.Request) {
 	data := EditUserPageData {
 		PageTitle: "Hairdresser | Edit User",
 		Title: "Edit User",
-		Content: "This is a hairdresser web application.",
+		Content: "On this page, you can edit the username, password, and permissions for deleting bills and services.",
 		
 		Id: id,
 		Username: username,

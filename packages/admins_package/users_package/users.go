@@ -51,7 +51,7 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	data := UsersPageData {
 		PageTitle: "Hairdresser | Users",
 		Title: "Users",
-		Content: "This is a hairdresser web application.",
+		Content: "You can manage users by adding, editing or deleting them as needed.",
 		
 		Users: Users,
 		IsAdmin: isAdmin,

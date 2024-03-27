@@ -52,7 +52,7 @@ func AddUserHandler(w http.ResponseWriter, r *http.Request) {
 	data := AddUserPageData {
 		PageTitle: "Hairdresser | Add User",
 		Title: "Add User",
-		Content: "This is a hairdresser web application.",
+		Content: "This page serves the purpose of adding a new user to the system.",
 
 		IsAdmin: isAdmin,
 	}

@@ -43,7 +43,7 @@ func DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	data := DashboardPageData {
 		PageTitle: "Hairdresser | Dashboard",
 		Title: "Hairdresser",
-		Content: "This is a hairdresser web application.",
+		Content: "The dashboard offers a convenient option for adding bills, allowing you to easily manage your financial commitments and expenses.",
 		Bills: bills_package.Bills,
 		Services: services_package.Services,
 		

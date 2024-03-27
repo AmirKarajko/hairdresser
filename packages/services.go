@@ -40,7 +40,7 @@ func ServicesHandler(w http.ResponseWriter, r *http.Request) {
 	data := ServicesPageData {
 		PageTitle: "Hairdresser | Services",
 		Title: "Services",
-		Content: "This is a hairdresser web application.",
+		Content: "On this page you have the option to add a new service with a price.",
 		Services: services_package.Services,
 		
 		PermissionDeleteService: permissionDeleteService,
