@@ -19,13 +19,14 @@
                 <p>{{.Content}}</p>
             </div>
 
-            <button class="btn btn-primary" onclick="openAddUserPage()">Add new user</button>
+            <div class="row">
+                <button class="btn btn-primary" onclick="openAddUserPage()">Add new user</button>
+            </div>
 
             <div class="row table-responsive">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <td>ID</td>
                             <td>USERNAME</td>
                             <td>PASSWORD</td>
                             <td>ACTIONS</td>
@@ -34,7 +35,6 @@
                     <tbody>
                         {{range .Users}}
                         <tr>
-                            <th scope="row">{{.ID}}</th>
                             <td>{{.USERNAME}}</td>
                             <td>{{.PASSWORD}}</td>
                             <td>
