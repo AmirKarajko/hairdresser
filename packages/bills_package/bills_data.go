@@ -7,7 +7,7 @@ import (
 )
 
 type BillsData struct {
-	USER int
+	USER string
 	ID int
 	SERVICE_NAME string
 	SERVICE_PRICE float32
@@ -21,7 +21,7 @@ func LoadBillsData() {
 
 	database_package.DatabaseConnect()
 
-	rows, err := database_package.DB.Query("SELECT users.id, bills.id, services.name, services.price, bills.date FROM bills INNER JOIN services ON bills.service = services.id INNER JOIN users ON bills.user = users.id")
+	rows, err := database_package.DB.Query("SELECT users.username, bills.id, services.name, services.price, bills.date FROM bills INNER JOIN services ON bills.service = services.id INNER JOIN users ON bills.user = users.id")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,19 +29,19 @@ func LoadBillsData() {
 
 	for rows.Next() {
 		var (
-			userID int
+			user string
 			billID int
 			serviceName string
 			servicePrice float32
 			billDate string
 		)
 
-		err := rows.Scan(&userID, &billID, &serviceName, &servicePrice, &billDate)
+		err := rows.Scan(&user, &billID, &serviceName, &servicePrice, &billDate)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		Bills = append(Bills, BillsData{userID, billID, serviceName, servicePrice, billDate})
+		Bills = append(Bills, BillsData{user, billID, serviceName, servicePrice, billDate})
 	}
 
 	if err := rows.Err(); err != nil {
