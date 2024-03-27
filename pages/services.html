@@ -45,13 +45,13 @@
                             {{if or .IsAdmin .PermissionDeleteService}}
                                 {{range .Services}}
                                 <li class="list-group-item">
-                                    <p>ID: {{.ID}} Name: {{.NAME}} Price: {{.PRICE}}</p> <button class="btn btn-primary" onclick="showDeleteAlert('{{.ID}}')">Delete</button>
+                                    <p>Name: {{.NAME}} Price: {{.PRICE}}</p> <button class="btn btn-primary" onclick="showDeleteAlert('{{.ID}}')">Delete</button>
                                 </li>
                                 {{end}}
                             {{else}}
                                 {{range .Services}}
                                 <li class="list-group-item">
-                                    <p>ID: {{.ID}} Name: {{.NAME}} Price: {{.PRICE}}</p>
+                                    <p>Name: {{.NAME}} Price: {{.PRICE}}</p>
                                 </li>
                                 {{end}}
                             {{end}}
